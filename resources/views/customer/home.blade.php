@@ -1,139 +1,418 @@
 @extends('layouts.main')
 
 @section('container')
-
-<section class="" id="home">
-    <div class=" text-white min-h-screen">
-        <div class="mx-auto flex flex-col md:flex-row items-center py-32 my-0 md:my-24">
-            <div class="mx-auto flex flex-col w-full lg:w-2/3 justify-start items-start p-0">
-                <h1 id="typed-output" class="text-3xl md:text-6xl text-yellow-300 tracking-loose"><span id="insertion-point"></span></h1>
-                <h2 id="animated-h2" class="text-3xl md:text-5xl leading-relaxed md:leading-snug mb-2">Solusi Sewa Mobil Cepat Untuk Kebutuhan Anda</h2>
-
-                <div data-aos="fade-zoom-in" data-aos-easing="ease-in-back" data-aos-delay="3000" data-aos-offset="0">
-                    <p class="text-sm md:text-base text-gray-50 mb-4">Klik di bawah ini untuk melihat Daftar Mobil</p>
-                    <a href="/daftarmobil" class="bg-transparent no-underline hover:bg-yellow-300 text-yellow-300 hover:text-white rounded shadow hover:shadow-lg py-2 px-4 border border-yellow-300 hover:border-transparent">
-                        Daftar Mobil</a>
+<!-- Hero Section -->
+<section class="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <!-- Background Video/Image -->
+    <div class="absolute inset-0 z-0">
+        <div class="absolute inset-0 bg-gradient-to-r from-black via-black/70 to-transparent z-10"></div>
+        <img src="https://images.unsplash.com/photo-1494976388531-d1058494cdd8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" 
+             alt="Hero Background" 
+             class="w-full h-full object-cover animate-kenburns">
+    </div>
+    
+    <!-- Hero Content -->
+    <div class="relative z-20 container mx-auto px-4 sm:px-6 lg:px-8 py-32">
+        <div class="grid lg:grid-cols-2 gap-12 items-center">
+            <div data-aos="fade-right" data-aos-delay="200">
+                <div class="inline-flex items-center bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 mb-6 border border-yellow-500/30">
+                    <span class="w-2 h-2 bg-yellow-500 rounded-full animate-pulse mr-2"></span>
+                    <span class="text-sm font-medium text-yellow-500">Premium Car Rental Service</span>
                 </div>
-            </div>
-            <div class="p-1  mb-6 md:mb-0 md:mt-0 mt-0 ml-0 md:ml-0 lg:w-2/3 justify-center">
-                <div class="h-70 flex flex-row-reverse content-center">
+                
+                <h1 class="text-5xl sm:text-6xl lg:text-7xl font-bold leading-tight mb-6">
+                    <span id="typed-output" class="gradient-text"></span>
+                    <br>
+                    <span class="text-white">Solusi Sewa Mobil</span>
+                    <br>
+                    <span class="bg-gradient-to-r from-yellow-400 to-yellow-600 bg-clip-text text-transparent">Cepat & Terpercaya</span>
+                </h1>
+                
+                <p class="text-lg text-gray-300 mb-8 max-w-lg" data-aos="fade-right" data-aos-delay="400">
+                    Nikmati pengalaman berkendara terbaik dengan armada mobil premium kami. 
+                    Layanan 24/7 dengan harga kompetitif dan driver profesional.
+                </p>
+                
+                <div class="flex flex-wrap gap-4" data-aos="fade-right" data-aos-delay="600">
+                    <a href="/daftarmobil" 
+                       class="group relative px-8 py-4 bg-gradient-to-r from-yellow-400 to-yellow-600 text-black font-semibold rounded-full overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-yellow-500/50 hover:scale-105">
+                        <span class="relative z-10">Lihat Daftar Mobil</span>
+                        <div class="absolute inset-0 bg-gradient-to-r from-yellow-500 to-yellow-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    </a>
+                    
+                    <a href="#about-section" 
+                       class="group px-8 py-4 bg-white/10 backdrop-blur-sm text-white font-semibold rounded-full border border-white/20 hover:bg-white/20 transition-all duration-300 hover:scale-105">
+                        <i class="fas fa-play mr-2 text-yellow-500 group-hover:animate-pulse"></i>
+                        Tentang Kami
+                    </a>
+                </div>
+                
+                <!-- Stats -->
+                <div class="grid grid-cols-3 gap-8 mt-12 pt-8 border-t border-white/10" data-aos="fade-up" data-aos-delay="800">
                     <div>
-                        <img class="top-0 rounded-es-full" src="https://i.pinimg.com/564x/34/49/10/344910343716de41e27f92a6c0320708.jpg">
+                        <div class="text-3xl font-bold gradient-text">500+</div>
+                        <div class="text-sm text-gray-400">Mobil Tersedia</div>
+                    </div>
+                    <div>
+                        <div class="text-3xl font-bold gradient-text">1000+</div>
+                        <div class="text-sm text-gray-400">Pelanggan Puas</div>
+                    </div>
+                    <div>
+                        <div class="text-3xl font-bold gradient-text">24/7</div>
+                        <div class="text-sm text-gray-400">Layanan</div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-</section>
-
-<section id="about-section" class="about-section">
-    <div id="about-section-content" data-aos="zoom-in-left">
-        <h1 class="text-3x1 font-semibold text-center">Tentang Kami</h1>
-        <p class="mt-10 text-lg">
-            Kami adalah sebuah perusahaan yang berdedikasi untuk memberikan solusi terbaik kepada pelanggan kami. Dengan pengalaman bertahun-tahun, kami siap melayani Anda dengan sepenuh hati.
-            Solusi atas semua kebutuhan transportasi dalam perjalanan wisata atupun bisnis anda di seluruh kota Sukabumi. dengan berbagai Jenis unit mobil yang sangat nyaman ketika anda pakai akan memanjakan anda saat melakukan perjalanan. Rental Mobil Murah yang kami sewakan pun sangat ber-variasi.
-            Ini akan memudahkan anda sebagai penyewa saat menentukan kendaraan terbaik menurut selera anda atau kendaraan yang biasa anda gunakan dalam keseharian. Pelayanan DJVR.com mencakup sewa rental mobil dalam kota Sukabumi dan luar kota Sukabumi. Terutama destinasi Wisata dalam kota maupun luar kota di provinsi Jawa Barat.
-            Tidak perlu hawatir kami pun memenuhi kebutuhan akan perjalanan jauh keluar provinsi.
-        </p>
-    </div>
-</section>
-
-<div class="flex">
-    <!-- Bagian Kiri -->
-    <section id="contact-section" class="flex-1">
-        <div class="flex items-top justify-center min-h-screen sm:items-center sm:pt-0 py-0 my-0" data-aos="zoom-out">
-            <div class="max-w-full mx-auto sm:px-4 lg:px-6">
-                <div class="overflow-hidden">
-                    <div class="text-center grid grid-cols-1 md:grid-cols-1">
-                        <div class="p-6 bg-gray-100 dark:bg-gray-800 sm:rounded-lg">
-                            <h1 class="text-4xl sm:text-5xl text-gray-800 dark:text-white font-extrabold tracking-tight">
-                                Hubungi Kami
-                            </h1>
-                            <p class="text-normal  text-lg sm:text-2xl font-medium text-gray-600 dark:text-gray-400 mt-2 ">
-                                Untuk Pertanyaan lebih lanjut
-                            </p>
-                            <div class="flex justify-center items-center flex-direction-row">
-                                <div class="flex justify-center items-center  text-gray-600 dark:text-gray-400">
-                                    <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" class="w-8 h-8 text-gray-500">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                    </svg>
-                                    <div class="ml-4 text-md tracking-wide font-semibold w-40">
-                                        Griya Selabumi Indah Blok H-18, SKIP, 14345
-                                    </div>
-                                </div>
-                                <!-- TELEPON -->
-                                <div class="flex justify-end items-center text-center">
-                                    <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" class="w-8 h-8 text-gray-500">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                                    </svg>
-                                    <div class="ml-4 text-md tracking-wide font-semibold w-40">
-                                        +62 81563636166
-                                    </div>
-                                </div>
-                                <div class="flex justify-center items-center text-gray-600 dark:text-gray-400">
-                                    <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" class="w-8 h-8 text-gray-500">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                                    </svg>
-                                    <div class="ml-4 text-md tracking-wide font-semibold w-40">
-                                        DJVR@gmail.com
-                                    </div>
-                                </div>
-                            </div>
+            
+            <div class="relative" data-aos="fade-left" data-aos-delay="400">
+                <!-- Floating Car Image -->
+                <div class="relative floating">
+                    <img src="https://i.pinimg.com/564x/34/49/10/344910343716de41e27f92a6c0320708.jpg" 
+                         alt="Premium Car" 
+                         class="relative z-10 w-full max-w-lg mx-auto rounded-2xl shadow-2xl">
+                    
+                    <!-- Decorative Elements -->
+                    <div class="absolute -top-6 -right-6 w-32 h-32 bg-yellow-500/20 rounded-full blur-2xl"></div>
+                    <div class="absolute -bottom-6 -left-6 w-32 h-32 bg-yellow-500/20 rounded-full blur-2xl"></div>
+                    
+                    <!-- Badge -->
+                    <div class="absolute -top-4 -right-4 z-20 bg-gradient-to-r from-yellow-400 to-yellow-600 text-black font-bold px-4 py-2 rounded-full shadow-xl animate-bounce">
+                        <i class="fas fa-star mr-1"></i>
+                        Premium Quality
+                    </div>
+                </div>
+                
+                <!-- Features List -->
+                <div class="absolute -bottom-12 left-1/2 transform -translate-x-1/2 w-[90%] glass-effect-dark rounded-2xl p-4 backdrop-blur-md">
+                    <div class="grid grid-cols-3 gap-4">
+                        <div class="text-center">
+                            <div class="text-yellow-500 text-xl mb-1"><i class="fas fa-wifi"></i></div>
+                            <div class="text-xs text-gray-300">Free WiFi</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-yellow-500 text-xl mb-1"><i class="fas fa-snowflake"></i></div>
+                            <div class="text-xs text-gray-300">AC Dingin</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-yellow-500 text-xl mb-1"><i class="fas fa-shield-alt"></i></div>
+                            <div class="text-xs text-gray-300">Asuransi</div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+    
+    <!-- Scroll Indicator -->
+    <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20 animate-bounce">
+        <a href="#about-section" class="text-white/60 hover:text-white transition-colors">
+            <i class="fas fa-chevron-down text-2xl"></i>
+        </a>
+    </div>
+</section>
 
-    <!-- Bagian Kanan -->
-    <div class="flex-1 bg-gray- dark:bg-gray-" data-aos="zoom-out">
-        <div class="kanan" id="max-w-3xl mx-auto sm:px-4 lg:px-6">
-            <div class="overflow-hidden">
-                <div class="text-center grid grid-cols-1 md:grid-cols-1">
-                    <div class="p-6 bg-gray-100 dark:bg-gray-800 sm:rounded-lg">
-                        <a href="https://www.google.com/maps/@-6.913957,106.9243981,3a,75y,115.66h,90.31t/data=!3m6!1e1!3m4!1sZys4ZloIa56ly31-KLWGXQ!2e0!7i16384!8i8192?entry=ttu" target="_blank">
-                            <img src="image/PetaDJVR.png" alt="Peta DJVR" style="width: 100%; height: auto;" />
+<!-- About Section -->
+<section id="about-section" class="py-24 relative overflow-hidden">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid lg:grid-cols-2 gap-12 items-center">
+            <div data-aos="fade-right">
+                <span class="text-yellow-500 font-semibold text-sm tracking-wider uppercase mb-4 block">Tentang Kami</span>
+                <h2 class="text-4xl lg:text-5xl font-bold mb-6">
+                    Pengalaman Terbaik Dalam
+                    <span class="gradient-text">Setiap Perjalanan</span>
+                </h2>
+                
+                <div class="space-y-4 text-gray-300">
+                    <p class="leading-relaxed">
+                        Kami adalah perusahaan rental mobil premium yang berdedikasi untuk memberikan solusi 
+                        transportasi terbaik di Sukabumi. Dengan pengalaman bertahun-tahun, kami memahami bahwa 
+                        setiap perjalanan memiliki cerita uniknya sendiri.
+                    </p>
+                    
+                    <p class="leading-relaxed">
+                        DJVR.com menyediakan berbagai pilihan unit mobil terawat dan nyaman untuk perjalanan 
+                        wisata maupun bisnis Anda. Setiap mobil kami dilengkapi dengan fitur terkini dan 
+                        didukung oleh driver profesional yang ramah dan berpengalaman.
+                    </p>
+                </div>
+                
+                <!-- Features Grid -->
+                <div class="grid grid-cols-2 gap-4 mt-8">
+                    <div class="glass-effect-dark p-4 rounded-xl hover:scale-105 transition-transform">
+                        <div class="text-yellow-500 text-2xl mb-2"><i class="fas fa-car"></i></div>
+                        <h4 class="font-semibold">Armada Baru</h4>
+                        <p class="text-sm text-gray-400">Unit < 2 tahun</p>
+                    </div>
+                    
+                    <div class="glass-effect-dark p-4 rounded-xl hover:scale-105 transition-transform">
+                        <div class="text-yellow-500 text-2xl mb-2"><i class="fas fa-clock"></i></div>
+                        <h4 class="font-semibold">24/7 Layanan</h4>
+                        <p class="text-sm text-gray-400">Siap melayani</p>
+                    </div>
+                    
+                    <div class="glass-effect-dark p-4 rounded-xl hover:scale-105 transition-transform">
+                        <div class="text-yellow-500 text-2xl mb-2"><i class="fas fa-map-marked-alt"></i></div>
+                        <h4 class="font-semibold">Luar Kota</h4>
+                        <p class="text-sm text-gray-400">Perjalanan jauh</p>
+                    </div>
+                    
+                    <div class="glass-effect-dark p-4 rounded-xl hover:scale-105 transition-transform">
+                        <div class="text-yellow-500 text-2xl mb-2"><i class="fas fa-headset"></i></div>
+                        <h4 class="font-semibold">Support</h4>
+                        <p class="text-sm text-gray-400">Responsif 24 jam</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="relative" data-aos="fade-left">
+                <div class="relative rounded-2xl overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" 
+                         alt="Our Team" 
+                         class="w-full h-auto">
+                    
+                    <!-- Overlay -->
+                    <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
+                    
+                    <!-- Experience Badge -->
+                    <div class="absolute bottom-6 left-6 glass-effect-dark rounded-xl p-4">
+                        <div class="text-3xl font-bold text-yellow-500">10+</div>
+                        <div class="text-sm text-gray-300">Tahun Pengalaman</div>
+                    </div>
+                </div>
+                
+                <!-- Decorative Pattern -->
+                <div class="absolute -z-10 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-72 h-72 bg-yellow-500/20 rounded-full blur-3xl"></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Why Choose Us -->
+<section class="py-24 bg-gradient-to-b from-transparent to-white/5">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-3xl mx-auto mb-16" data-aos="fade-up">
+            <span class="text-yellow-500 font-semibold text-sm tracking-wider uppercase mb-4 block">Keunggulan Kami</span>
+            <h2 class="text-4xl lg:text-5xl font-bold mb-6">
+                Mengapa Memilih
+                <span class="gradient-text">Kami?</span>
+            </h2>
+            <p class="text-gray-400">
+                Kami memberikan pelayanan terbaik dengan berbagai keunggulan yang membuat pengalaman sewa mobil Anda menjadi lebih menyenangkan.
+            </p>
+        </div>
+        
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <!-- Feature Cards -->
+            @php
+            $features = [
+                [
+                    'icon' => 'fa-solid fa-shield-halved',
+                    'title' => 'Terpercaya',
+                    'desc' => 'Legalitas jelas dan terjamin'
+                ],
+                [
+                    'icon' => 'fa-solid fa-bolt',
+                    'title' => 'Cepat',
+                    'desc' => 'Proses booking instan'
+                ],
+                [
+                    'icon' => 'fa-solid fa-tag',
+                    'title' => 'Harga Bersaing',
+                    'desc' => 'Termurah di Sukabumi'
+                ],
+                [
+                    'icon' => 'fa-solid fa-hand-holding-heart',
+                    'title' => 'Pelayanan Prima',
+                    'desc' => 'Customer service ramah'
+                ]
+            ];
+            @endphp
+            
+            @foreach($features as $feature)
+            <div class="group glass-effect-dark rounded-2xl p-6 hover:scale-105 transition-all duration-300 hover:shadow-xl hover:shadow-yellow-500/10" 
+                 data-aos="fade-up" 
+                 data-aos-delay="{{ $loop->index * 100 }}">
+                <div class="w-16 h-16 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                    <i class="{{ $feature['icon'] }} text-black text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-2">{{ $feature['title'] }}</h3>
+                <p class="text-gray-400 text-sm">{{ $feature['desc'] }}</p>
+            </div>
+            @endforeach
+        </div>
+    </div>
+</section>
+
+<!-- Contact & Map Section -->
+<section id="contact-section" class="py-24">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid lg:grid-cols-2 gap-12 items-start">
+            <!-- Contact Info -->
+            <div data-aos="fade-right">
+                <span class="text-yellow-500 font-semibold text-sm tracking-wider uppercase mb-4 block">Hubungi Kami</span>
+                <h2 class="text-4xl lg:text-5xl font-bold mb-6">
+                    Siap Melayani
+                    <span class="gradient-text">Kebutuhan Anda</span>
+                </h2>
+                <p class="text-gray-400 mb-8">
+                    Ada pertanyaan? Tim kami siap membantu Anda 24/7. Hubungi kami melalui kontak di bawah ini.
+                </p>
+                
+                <!-- Contact Cards -->
+                <div class="space-y-4">
+                    <div class="glass-effect-dark rounded-xl p-4 flex items-center gap-4 hover:scale-105 transition-transform">
+                        <div class="w-12 h-12 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-map-marker-alt text-black text-xl"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-sm text-gray-400">Alamat</h4>
+                            <p class="font-semibold">Griya Selabumi Indah Blok H-18, Sukabumi</p>
+                        </div>
+                    </div>
+                    
+                    <div class="glass-effect-dark rounded-xl p-4 flex items-center gap-4 hover:scale-105 transition-transform">
+                        <div class="w-12 h-12 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-phone-alt text-black text-xl"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-sm text-gray-400">Telepon</h4>
+                            <p class="font-semibold">+62 815 6363 6166</p>
+                        </div>
+                    </div>
+                    
+                    <div class="glass-effect-dark rounded-xl p-4 flex items-center gap-4 hover:scale-105 transition-transform">
+                        <div class="w-12 h-12 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-envelope text-black text-xl"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-sm text-gray-400">Email</h4>
+                            <p class="font-semibold">DJVR@gmail.com</p>
+                        </div>
+                    </div>
+                    
+                    <div class="glass-effect-dark rounded-xl p-4 flex items-center gap-4 hover:scale-105 transition-transform">
+                        <div class="w-12 h-12 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-clock text-black text-xl"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-sm text-gray-400">Jam Operasional</h4>
+                            <p class="font-semibold">Senin - Minggu, 24 Jam</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Social Media -->
+                <div class="mt-8">
+                    <h4 class="font-semibold mb-4">Ikuti Kami</h4>
+                    <div class="flex gap-4">
+                        <a href="#" class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-yellow-500 hover:text-black transition-all hover:scale-110">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-yellow-500 hover:text-black transition-all hover:scale-110">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-yellow-500 hover:text-black transition-all hover:scale-110">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-yellow-500 hover:text-black transition-all hover:scale-110">
+                            <i class="fab fa-tiktok"></i>
                         </a>
                     </div>
                 </div>
             </div>
+            
+            <!-- Map -->
+            <div class="relative group" data-aos="fade-left">
+                <div class="glass-effect-dark rounded-2xl p-2 overflow-hidden">
+                    <div class="rounded-xl overflow-hidden">
+                        <iframe 
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3957.603494981789!2d106.922277!3d-6.913957!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e684b8b0b0b0b0b%3A0x0!2zNsKwNTUnMDEuMiJTIDEwNsKwNTUnMjQuNCJF!5e0!3m2!1sen!2sid!4v1634567890123!5m2!1sen!2sid"
+                            width="100%" 
+                            height="450" 
+                            style="border:0;" 
+                            allowfullscreen="" 
+                            loading="lazy"
+                            class="w-full h-[450px] filter grayscale hover:grayscale-0 transition-all duration-500">
+                        </iframe>
+                    </div>
+                </div>
+                
+                <!-- Map Overlay -->
+                <div class="absolute top-4 right-4 glass-effect rounded-lg px-4 py-2 text-sm">
+                    <i class="fas fa-location-dot text-yellow-500 mr-2"></i>
+                    Klik untuk rute
+                </div>
+            </div>
         </div>
     </div>
-</div>
+</section>
 
+<!-- CTA Section -->
+<section class="py-16 relative overflow-hidden">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="glass-effect-dark rounded-3xl p-12 relative overflow-hidden" data-aos="zoom-in">
+            <!-- Background Pattern -->
+            <div class="absolute inset-0 opacity-10">
+                <div class="absolute -top-24 -right-24 w-96 h-96 bg-yellow-500 rounded-full"></div>
+                <div class="absolute -bottom-24 -left-24 w-96 h-96 bg-yellow-600 rounded-full"></div>
+            </div>
+            
+            <div class="relative z-10 text-center max-w-3xl mx-auto">
+                <h2 class="text-3xl lg:text-4xl font-bold mb-4">
+                    Siap Untuk Perjalanan Anda?
+                </h2>
+                <p class="text-gray-300 mb-8">
+                    Booking sekarang dan dapatkan promo spesial untuk penyewaan pertama Anda!
+                </p>
+                <div class="flex flex-wrap gap-4 justify-center">
+                    <a href="/sewa" 
+                       class="px-8 py-4 bg-gradient-to-r from-yellow-400 to-yellow-600 text-black font-semibold rounded-full hover:shadow-lg hover:shadow-yellow-500/50 transition-all hover:scale-105">
+                        <i class="fas fa-calendar-check mr-2"></i>
+                        Booking Sekarang
+                    </a>
+                    <a href="/daftarmobil" 
+                       class="px-8 py-4 bg-white/10 backdrop-blur-sm text-white font-semibold rounded-full border border-white/20 hover:bg-white/20 transition-all hover:scale-105">
+                        <i class="fas fa-car mr-2"></i>
+                        Lihat Mobil
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
-
-
-
+@push('scripts')
 <script>
-    // Fungsi untuk menangani pengguliran ke bagian yang sesuai
-    function scrollToSection(sectionId) {
-        const section = document.getElementById(sectionId);
-        if (section) {
-            section.scrollIntoView({
-                behavior: 'smooth'
-            });
-        }
-    }
-
-    // Tambahkan event listener untuk tautan "home"
-    document.querySelector('a[href="#home"]').addEventListener('click', function(event) {
-        event.preventDefault();
-        scrollToSection('home');
+    // Typed.js Initialization
+    document.addEventListener('DOMContentLoaded', function() {
+        var options = {
+            strings: ['DVJR RentCar', 'Premium Service', 'Your Trusted Partner'],
+            typeSpeed: 50,
+            backSpeed: 30,
+            backDelay: 2000,
+            startDelay: 500,
+            loop: true,
+            showCursor: true,
+            cursorChar: '|',
+            autoInsertCss: true
+        };
+        
+        new Typed('#typed-output', options);
     });
-
-    // Tambahkan event listener untuk tautan "About"
-    document.querySelector('a[href="#about-section"]').addEventListener('click', function(event) {
-        event.preventDefault();
-        scrollToSection('about-section');
-    });
-
-    // Tambahkan event listener untuk tautan "Contact"
-    document.querySelector('a[href="#contact-section"]').addEventListener('click', function(event) {
-        event.preventDefault();
-        scrollToSection('contact-section');
+    
+    // Smooth Scroll
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
     });
 </script>
+@endpush
 @endsection

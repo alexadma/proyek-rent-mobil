@@ -386,7 +386,7 @@
     // Typed.js Initialization
     document.addEventListener('DOMContentLoaded', function() {
         var options = {
-            strings: ['DVJR RentCar', 'Premium Service', 'Your Trusted Partner'],
+            strings: ['DVJR RentCar', 'Premium Service', 'Profesional Driver'],
             typeSpeed: 50,
             backSpeed: 30,
             backDelay: 2000,

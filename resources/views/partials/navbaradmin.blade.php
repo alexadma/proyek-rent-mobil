@@ -1,152 +1,137 @@
-<!-- component -->
-<!DOCTYPE html>
-<html>
+<aside class="sidebar" id="adminSidebar">
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap');
 
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link href="/dist/tailwind.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
-</head>
+    .sidebar { display: flex; flex-direction: column; }
 
-<body class="bg-gray-900">
-    <!-- <span class="absolute text-white text-4xl top-5 left-4 cursor-pointer" onclick="openSidebar()">
-        <i class="bi bi-filter-left px-2 bg-gray-900 rounded-md"></i>
-    </span> -->
+    .sb-brand {
+        padding: 1.5rem 1.2rem 1.1rem;
+        border-bottom: 1px solid rgba(201,168,76,0.12);
+        flex-shrink: 0;
+    }
+    .sb-brand-logo { display: flex; align-items: center; gap: .7rem; text-decoration: none; }
+    .sb-brand-icon {
+        width: 40px; height: 40px;
+        background: linear-gradient(135deg, #C9A84C, #8a6010);
+        border-radius: 11px; display: flex; align-items: center;
+        justify-content: center; font-size: 1.15rem; flex-shrink: 0;
+        box-shadow: 0 0 18px rgba(201,168,76,0.28);
+    }
+    .sb-brand-name {
+        font-family: 'Syne', sans-serif; font-size: 1.05rem;
+        font-weight: 800; color: #fff; line-height: 1.1;
+    }
+    .sb-brand-name span { color: #C9A84C; }
+    .sb-brand-sub { font-size: .62rem; color: #444; letter-spacing: .07em; text-transform: uppercase; margin-top: 2px; }
 
-    <!-- Sidebar awal -->
-    <div class="sidebar fixed top-0 bottom-0 lg:left-0 p-2 w-[300px] overflow-y-auto text-center bg-gray-900">
-        <div class="text-gray-100 text-xl">
-            <div class="p-2.5 mt-1 flex items-center">
-                <i class="bi bi-app-indicator px-2 py-1 rounded-md bg-blue-600"></i>
-                <h1 class="font-bold text-yellow-300 text-[15px] ml-3">DVJR</h1>
-                <i class="bi bi-x cursor-pointer ml-28 lg:hidden" onclick="openSidebar()"></i>
-            </div>
-            <div class="my-2 bg-gray-600 h-[1px]"></div>
-        </div>
-        <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-white">
-            <i class="fas fa-home"></i>
-            <li class="nav-item list-none">
-                <a href="{{ route('home.admin') }}" class="nav-link hover:bg-gray-800 text-white font-bold py-2 px-4 rounded inline-block transition duration-300 text-xl">
-                    <span class="text-[15px] text-gray-200 font-bold text-lg">
-                        {{ __('Dasbor') }}
-                    </span>
-                </a>
-            </li>
-        </div>
-        <div class="my-2 bg-gray-600 h-[1px]"></div>
-        <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800 text-xl" onclick="dropdown('sewa')">
-            <i class="fas fa-book text-white"></i>
-            <div class="flex justify-between w-full items-center">
-                <span class="text-[15px] ml-4 text-gray-200 font-bold">Sewa</span>
-                <span class="text-sm rotate-180" id="arrow-sewa">
-                    <i class="bi bi-chevron-down text-white"></i>
-                </span>
-            </div>
-        </div>
-        <div class="text-left text-sm mt-2 w-full mx-auto text-gray-200 font-bold" id="submenu-sewa">
-            <li class="nav-item list-none">
-                <a href="{{ route('transaksi') }}" class="nav-link bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded inline-block transition duration-300 text-xl">
-                    <span class="text-[15px] ml-4 text-gray-200 font-bold text-lg">
-                        <i class="nav-icon fas fa-check-circle"></i>
-                        {{ __('Daftar Transaksi') }}
-                    </span>
-                </a>
-            </li>
-            <li class="nav-item list-none">
-                <a href="{{ route('pengembalian') }}" class="nav-link bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded inline-block transition duration-300 text-xl">
-                    <span class="text-[15px] ml-4 text-gray-200 font-bold text-lg">
-                        <i class="nav-icon fas fa-arrow-left"></i>
-                        {{ __('Pengembalian') }}
-                    </span>
-                </a>
-            </li>
-        </div>
+    .sb-user {
+        margin: .9rem .8rem .4rem;
+        background: rgba(255,255,255,0.03);
+        border: 1px solid rgba(201,168,76,0.1);
+        border-radius: 12px; padding: .75rem .9rem;
+        display: flex; align-items: center; gap: .7rem;
+    }
+    .sb-user-avatar {
+        width: 32px; height: 32px;
+        background: linear-gradient(135deg, #C9A84C, #7a5c10);
+        border-radius: 50%; display: flex; align-items: center;
+        justify-content: center; font-size: .8rem; font-weight: 700;
+        color: #000; flex-shrink: 0; font-family: 'Syne', sans-serif;
+    }
+    .sb-user-name { font-size: .82rem; font-weight: 600; color: #ddd; }
+    .sb-user-role { font-size: .62rem; color: #444; text-transform: uppercase; letter-spacing: .06em; }
 
-        <div class="my-2 bg-gray-600 h-[1px]"></div>
-        <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer text-white hover:bg-gray-800" onclick="dropdown('edit')">
-            <i class="fas fa-pencil-alt"></i>
-            <div class="flex justify-between w-full items-center">
-                <span class="text-[15px] ml-4 text-gray-200 font-bold">Edit</span>
-                <span class="text-sm rotate-180" id="arrow-edit">
-                    <i class="bi bi-chevron-down text-white "></i>
-                </span>
+    .sb-nav { flex: 1; padding: .4rem .7rem; overflow-y: auto; }
+    .sb-nav::-webkit-scrollbar { width: 3px; }
+    .sb-nav::-webkit-scrollbar-thumb { background: rgba(201,168,76,0.12); }
+
+    .sb-section {
+        font-size: .58rem; font-weight: 700; letter-spacing: .14em;
+        color: #333; text-transform: uppercase;
+        padding: .9rem .5rem .35rem;
+    }
+
+    .sb-item {
+        display: flex; align-items: center; gap: .7rem;
+        padding: .6rem .85rem; border-radius: 10px;
+        color: #555; font-size: .83rem; font-weight: 500;
+        text-decoration: none; transition: all .17s;
+        margin-bottom: 2px; position: relative;
+    }
+    .sb-item:hover { background: rgba(201,168,76,0.08); color: #C9A84C; text-decoration: none; }
+    .sb-item.active {
+        background: rgba(201,168,76,0.1); color: #C9A84C;
+        border: 1px solid rgba(201,168,76,0.18);
+    }
+    .sb-item.active::before {
+        content: ''; position: absolute; left: -1px; top: 22%; bottom: 22%;
+        width: 3px; background: #C9A84C; border-radius: 0 3px 3px 0;
+    }
+    .sb-icon { font-size: .95rem; width: 18px; text-align: center; flex-shrink: 0; }
+
+    .sb-footer { padding: .7rem; border-top: 1px solid rgba(201,168,76,0.08); flex-shrink: 0; }
+    .sb-logout {
+        display: flex; align-items: center; gap: .7rem;
+        padding: .6rem .85rem; border-radius: 10px;
+        color: #444; font-size: .83rem; text-decoration: none; transition: all .17s;
+    }
+    .sb-logout:hover { background: rgba(239,68,68,0.08); color: #f87171; text-decoration: none; }
+</style>
+
+    <!-- BRAND -->
+    <div class="sb-brand">
+        <a href="{{ route('home.admin') }}" class="sb-brand-logo">
+            <div class="sb-brand-icon">🚗</div>
+            <div>
+                <div class="sb-brand-name">DVJR <span>Rent</span></div>
+                <div class="sb-brand-sub">Admin Panel</div>
             </div>
-        </div>
-        <div class="text-left text-sm mt-2 w-full mx-auto text-gray-200 font-bold" id="submenu-edit">
-            <li class="nav-item list-none">
-                <a href="/supir" class="nav-link bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded inline-block transition duration-300 text-xl">
-                    <span class="text-[15px] ml-4 text-gray-200 font-bold text-lg">
-                        <i class="nav-icon fa fa-user"></i>
-                        {{ __('Supir') }}
-                    </span>
-                </a>
-            </li>
-            <li class="nav-item list-none">
-                <a href="/mobil" class="nav-link bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded inline-block transition duration-300 text-xl">
-                    <span class="text-[15px] ml-4 text-gray-200 font-bold text-lg">
-                        <i class="nav-icon fa fa-car"></i>
-                        {{ __('Mobil') }}
-                    </span>
-                </a>
-            </li>
-        </div>
-        <div class="my-2 bg-gray-600 h-[1px]"></div>
-        <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-800" onclick="dropdown('keuangan')">
-            <i class="fas fa-money-bill-wave text-white"></i>
-            <div class="flex justify-between w-full items-center">
-                <span class="text-[15px] ml-4 text-gray-200 font-bold">Keuangan</span>
-                <span class="text-sm rotate-180" id="arrow-keuangan">
-                    <i class="bi bi-chevron-down text-white"></i>
-                </span>
-            </div>
-        </div>
-        <div class="w-full text-left text-sm mt-2 ml-3 mx-auto text-gray-200 font-bold" id="submenu-keuangan">
-            <li class="nav-item list-none">
-                <a href="{{ route('keuangan') }}" class="nav-link bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded inline-block transition duration-300 text-xl">
-                    <span class="text-[15px] ml-4 text-gray-200 font-bold text-lg">
-                        <i class="nav-icon fas fa-calendar"></i>
-                        {{ __('Pemasukan') }}
-                    </span>
-                </a>
-            </li>     
-        </div>
-        <!-- Tombol Logout -->
-        <div class="absolute bottom-0 left-0 w-full">
-            <form action="{{ route('logout') }}" method="POST">
-                @csrf
-                <button type="submit" class="w-full flex items-center rounded-md px-3 py-3 duration-300 cursor-pointer hover:bg-red-600 text-white">
-                    <i class="fas fa-sign-out-alt"></i>
-                    <span class="text-sm ml-2 text-gray-200 font-bold">Logout</span>
-                </button>
-            </form>
-        </div>
+        </a>
     </div>
 
-    <!-- Akhir Sidebar -->
+    <!-- USER -->
+    @auth('admin')
+    <div class="sb-user">
+        <div class="sb-user-avatar">{{ strtoupper(substr(auth('admin')->user()->username ?? 'A', 0, 1)) }}</div>
+        <div>
+            <div class="sb-user-name">{{ auth('admin')->user()->username ?? 'Admin' }}</div>
+            <div class="sb-user-role">Administrator</div>
+        </div>
+    </div>
+    @endauth
 
+    <!-- NAV -->
+    <nav class="sb-nav">
+        <div class="sb-section">Utama</div>
+        <a href="{{ route('home.admin') }}" class="sb-item {{ request()->routeIs('home.admin') ? 'active' : '' }}">
+            <span class="sb-icon">🏠</span> Dashboard
+        </a>
+        <a href="{{ route('mobil.index') }}" class="sb-item {{ request()->routeIs('mobil.*') ? 'active' : '' }}">
+            <span class="sb-icon">🚙</span> Armada Mobil
+        </a>
+        <a href="{{ route('supir.index') }}" class="sb-item {{ request()->routeIs('supir.*') ? 'active' : '' }}">
+            <span class="sb-icon">👤</span> Driver
+        </a>
 
-    <script type="text/javascript">
-        function dropdown(menu) {
-            const submenu = document.querySelector(`#submenu-${menu}`);
-            const arrow = document.querySelector(`#arrow-${menu}`);
-            submenu.classList.toggle("hidden");
-            arrow.classList.toggle("rotate-180");
-        }
+        <div class="sb-section">Transaksi</div>
+        <a href="{{ route('transaksi') }}" class="sb-item {{ request()->is('transaksi') ? 'active' : '' }}">
+            <span class="sb-icon">🔍</span> Verifikasi
+        </a>
+        <a href="{{ route('pengembalian') }}" class="sb-item {{ request()->is('pengembalian') ? 'active' : '' }}">
+            <span class="sb-icon">📋</span> Pengembalian
+        </a>
+        <a href="{{ route('keuangan') }}" class="sb-item {{ request()->is('keuangan') ? 'active' : '' }}">
+            <span class="sb-icon">💰</span> Keuangan
+        </a>
+    </nav>
 
-        // Hide all submenus when the page loads
-        document.addEventListener("DOMContentLoaded", function() {
-            const allSubmenus = document.querySelectorAll('[id^="submenu-"]');
-            allSubmenus.forEach((submenu) => {
-                submenu.classList.add("hidden");
-            });
-        });
-
-        // function openSidebar() {
-        //     document.querySelector(".sidebar").classList.toggle("hidden");
-        // }
-    </script>
-</body>
-
-</html>
+    <!-- LOGOUT -->
+    <div class="sb-footer">
+        <a href="{{ route('logout') }}"
+           onclick="event.preventDefault(); document.getElementById('admin-logout-form').submit();"
+           class="sb-logout">
+            <span class="sb-icon">🚪</span> Keluar
+        </a>
+        <form id="admin-logout-form" action="{{ route('logout') }}" method="POST" style="display:none;">@csrf</form>
+    </div>
+</aside>

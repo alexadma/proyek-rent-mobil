@@ -42,66 +42,49 @@ class SewaController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {
-        $user = Auth::guard('web')->user(); // mendapatkan user yang sedang login
-        $customer = Customer::where('username', $user->username)->first();
+{
+    $user = Auth::guard('web')->user();
+    $customer = Customer::where('username', $user->username)->first();
 
-        $mobil = Mobil::find($request->pilih_mobil);
+    $validateData = $request->validate([
+        'tgl_pjm' => ['required', 'date', 'after_or_equal:' . Carbon::today()->toDateString()],
+    ]);
 
-        $supir = Supir::find($request->pilih_supir);
+    $nama     = $request->input('nama');
+    $nohp     = $request->input('nohp');
+    $alamat   = $request->input('alamat');
+    $nopol    = $request->input('nopol');
+    $jaminan  = $request->input('jaminan');
+    $mobil    = $request->input('mobil');
+    $supir    = $request->input('supir');
+    $total    = $request->input('total');
+    $durasi   = $request->input('durasi');
 
-        $nama = $request->input('nama');
-        $nohp = $request->input('nohp');
-        $waktu_pjm = $request->input('tgl_pjm');
-        $durasi = $request->input('durasi');
-        $alamat = $request->input('alamat');
-        $nopol = $request->input('nopol');
-        $jaminan = $request->input('jaminan');
-        $mobil = $request->input('mobil');
-        $supir = $request->input('supir');
-        $total = $request->input('total');
+    // ✅ Fix: konversi format datetime-local → format MySQL
+    $waktu_pjm   = Carbon::parse($request->input('tgl_pjm'))->format('Y-m-d H:i:s');
+    $waktu_balik = Carbon::parse($waktu_pjm)->addHours((int)$durasi)->format('Y-m-d H:i:s');
 
-        $waktu_balik = date('Y-m-d H:i:s', strtotime("+$durasi hours", strtotime($waktu_pjm)));
+    $lastRecord = Sewa::orderBy('id', 'desc')->first();
+    $newId      = $lastRecord ? $lastRecord->id + 1 : 1;
+    $no_invoice = 'RNT' . str_pad($newId, 5, '0', STR_PAD_LEFT);
 
-        $lastRecord = Sewa::orderBy('id', 'desc')->first();
-        $newId = $lastRecord ? $lastRecord->id + 1 : 1;
+    Sewa::create([
+        'no_invoice'      => $no_invoice,
+        'nama_customer'   => $nama,
+        'nohp'            => $nohp,
+        'alamat'          => $alamat,
+        'nama_mobil'      => $mobil,
+        'nopol'           => $nopol,
+        'nama_supir'      => $supir,
+        'tanggal_pinjam'  => $waktu_pjm,   // ✅ Format sudah benar
+        'tanggal_kembali' => $waktu_balik,
+        'jaminan'         => $jaminan,
+        'total_biaya'     => $total,
+        'bukti'           => null,
+    ]);
 
-        $no_invoice = 'RNT' . str_pad($newId, 5, '0', STR_PAD_LEFT);
-
-        $validateData = $request->validate([
-            'tgl_pjm' => ['required', 'date', 'after_or_equal:' . Carbon::today()->toDateString()],
-            // tambahkan aturan validasi untuk input lainnya sesuai kebutuhan
-        ]);
-
-
-        Sewa::create([
-            'no_invoice' => $no_invoice,
-            'nama_customer' => $nama,
-            'nohp' => $nohp,
-            'alamat' => $alamat,
-            'nama_mobil' => $mobil,
-            'nopol' => $nopol,
-            'nama_supir' => $supir,
-            'tanggal_pinjam' => $waktu_pjm,
-            'tanggal_kembali' => $waktu_balik,
-            'jaminan' => $jaminan,
-            'total_biaya' => $total,
-            'bukti' => null
-        ]);
-
-        // $sewa->nama_penyewa = $request->nama_penyewa;
-        // $sewa->nomor_hp = $request->nomor_hp;
-        // $sewa->alamat = $request->alamat;
-        // $sewa->pilih_mobil = $mobil->nama;
-        // $sewa->pilih_sopir = $sopir->nama;
-        // $sewa->tanggal_pinjam = $request->tgl_pjm;
-        // $sewa->tanggal_kembali = $request->tgl_kmbl;
-        // $sewa->total_biaya = $mobil->harga_sewa + $sopir->harga_sewa; // hitung total biaya
-        // $sewa->save();
-
-        return redirect('/invoice');
-
-    }
+    return redirect('/invoice');
+}
 
     /**
      * Display the specified resource.

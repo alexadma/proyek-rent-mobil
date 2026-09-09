@@ -115,32 +115,4 @@ return [
 
     'password_timeout' => 10800,
 
-        'guards' => [
-            'web' => [
-                'driver' => 'session',
-                'provider' => 'customers',
-            ],
-    
-            'admin' => [
-                'driver' => 'session',
-                'provider' => 'admins', // Gunakan provider 'admins' untuk admin
-            ],
-
-        ],
-    
-        'providers' => [
-            
-    
-            'admins' => [
-                'driver' => 'eloquent',
-                'model' => App\Models\Admin::class,
-            ],
-    
-            'customers' => [
-                'driver' => 'eloquent',
-                'model' => App\Models\Customer::class,
-            ],
-        ],
-    
-        // ...
-    ];
+];

@@ -23,12 +23,10 @@ class RedirectIfAuthenticated
             if (Auth::guard($guard)->check()) {
                 // Jika user adalah admin, arahkan ke halaman admin
                 if ($guard === 'admin') {
-                    return redirect()->route('admin.home');
-                } 
-                // Jika user adalah user biasa, arahkan ke halaman user
-                elseif ($guard === 'customer') {
-                    return redirect()->route('home');
+                    return redirect()->route('home.admin');
                 }
+                // Jika user adalah user biasa, arahkan ke halaman user
+                return redirect()->route('home');
             }
         }
 

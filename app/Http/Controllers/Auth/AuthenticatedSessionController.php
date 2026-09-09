@@ -25,45 +25,29 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
-        $fieldType = filter_var($request->login_id, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
+        $request->validate([
+            'username' => ['required', 'string'],
+            'password' => ['required', 'string'],
+        ]);
 
-        if ($fieldType == 'text') {
-            $request->validate([
-                'username' => 'required|exists:users,username',
-                'password' => 'required|min:5|max:45|exists:users,password',
-            ], [
-                'username.required' => 'Email atau Username dibutuhkan',
-                'username.email' => 'Username Invalid',
-                'username.exists' => 'Username tidak terdaftar di sistem',
-                'password.exists' => 'Password salah!',
-                'password.required' => 'Password dibutuhkan'
-            ]);
-        } else {
-            $request->validate([
-                'username' => 'required|exists:users,username',
-                'password' => 'required|min:5|max:45',
-            ], [
-                'username.required' => ' Username dibutuhkan',
-                'username.exists' => 'Username tidak terdaftar di sistem',
-                'password.exists' => 'Password salah!',
-                'password.required' => 'Password dibutuhkan'
-            ]);
-        }
+        $credentials = [
+            'username' => $request->username,
+            'password' => $request->password,
+        ];
 
-        $creds = array(
-            $fieldType => $request->username,
-            'password' => $request->password
-        );
-
-        if (Auth::guard('admin')->attempt($creds)) {
+        if (Auth::guard('admin')->attempt($credentials, $request->boolean('remember'))) {
+            $request->session()->regenerate();
             return redirect()->route('home.admin');
-        } elseif (Auth::guard('web')->attempt($creds)) {
-            return redirect()->route('home');
-        } 
-        else {
-            session()->flash('fail', 'Incorrect credentials');
-            return redirect()->route('login');
         }
+
+        if (Auth::guard('web')->attempt($credentials, $request->boolean('remember'))) {
+            $request->session()->regenerate();
+            return redirect()->route('home');
+        }
+
+        return back()->withErrors([
+            'username' => 'Username atau password salah.',
+        ])->onlyInput('username');
     }
 
     /**

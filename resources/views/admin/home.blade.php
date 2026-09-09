@@ -561,8 +561,8 @@
         </div>
         
         <h1 class="hero-title">
-            @if(auth()->check())
-                Selamat Datang,<br><span class="accent">{{ auth()->user()->username }}</span>
+            @if(auth('admin')->check())
+                Selamat Datang,<br><span class="accent">{{ auth('admin')->user()->username }}</span>
             @else
                 Selamat Datang,<br><span class="accent">Admin</span>
             @endif

@@ -113,7 +113,7 @@
                     <div class="fgroup">
                         <label>Status</label>
                         <select class="fcontrol" name="status">
-                            @foreach(['Tersedia','Disewa','Maintenance'] as $opt)
+                            @foreach(['TERSEDIA','DISEWA','MAINTENANCE'] as $opt)
                             <option {{ old('status', $mobil->status) == $opt ? 'selected' : '' }} value="{{ $opt }}">{{ $opt }}</option>
                             @endforeach
                         </select>

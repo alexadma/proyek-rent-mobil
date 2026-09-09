@@ -19,6 +19,11 @@ class PengembalianController extends Controller
     public function pengembalian_selesai($id)
     {
         $status = Verifikasi::find($id);
+
+        if (!$status) {
+            return redirect()->back()->with('error', 'Transaksi tidak ditemukan.');
+        }
+
         $mobil = Mobil::where('nama_mobil', $status->nama_mobil)->first();
         $supir = Supir::where('nama', $status->nama_supir)->first();
 

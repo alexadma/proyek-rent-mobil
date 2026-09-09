@@ -180,14 +180,18 @@
                         <td>{{ $data->jaminan }}</td>
                         <td><span class="amount-text">Rp {{ number_format($data->total_biaya, 0, ',', '.') }}</span></td>
                         <td>
+                            @if($data->bukti)
                             <a href="{{ asset('storage/' . $data->bukti) }}" target="_blank">
                                 <img src="{{ asset('storage/' . $data->bukti) }}" alt="Bukti" class="bukti-thumb">
                             </a>
+                            @else
+                            <span style="color:#555;">Belum upload</span>
+                            @endif
                         </td>
                         <td>
                             @php
                                 $v = strtolower($data->verifikasi ?? '');
-                                $cls = $v == 'approved' ? 'status-approved' : ($v == 'rejected' ? 'status-rejected' : 'status-pending');
+                                $cls = in_array($v, ['diterima', 'approved', 'selesai']) ? 'status-approved' : (in_array($v, ['ditolak', 'rejected']) ? 'status-rejected' : 'status-pending');
                             @endphp
                             <span class="status-pill {{ $cls }}">{{ $data->verifikasi }}</span>
                         </td>

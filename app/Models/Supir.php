@@ -11,12 +11,20 @@ class Supir extends Model
 
         protected $table = 'supirs';
         protected $primaryKey = 'noktp';
+        public $incrementing = false;
+        protected $keyType = 'string';
         protected $fillable = [
                 'noktp',
                 'nama',
                 'alamat',
                 'nohpsupir',
                 'image',
-                'harga'
+                'sewa',
+                'status'
         ];
+
+        public function getRouteKeyName()
+        {
+                return 'noktp';
+        }
 }

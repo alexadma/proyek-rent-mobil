@@ -15,7 +15,11 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Vite -->
-    @vite('resources/css/app.css')
+    @if (File::exists(public_path('build/manifest.json')))
+        @vite('resources/css/app.css')
+    @else
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    @endif
 
     <style>
         :root {

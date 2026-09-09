@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Mobil;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use PhpParser\Node\Stmt\Return_;
 
 class AdminMobilController extends Controller
 {
@@ -46,6 +45,8 @@ class AdminMobilController extends Controller
             $validateData['foto'] = $request->file('foto')->store('foto-mobil');
         }
 
+        $validateData['status'] = 'TERSEDIA';
+
         Mobil::create($validateData);
 
         return redirect('mobil')->with('success', 'Mobil Baru telah ditambahkan');
@@ -76,11 +77,20 @@ class AdminMobilController extends Controller
             'warna' => 'required',
             'type' => 'required',
             'sewa' => 'required',
+            'status' => 'required',
             'tgl_pjk' => 'required',
             'foto' => 'image|file|max:5000'
         ];
 
         $validateData = $request->validate($rules);
+
+        if ($validateData['status'] === 'Tersedia') {
+            $validateData['status'] = 'TERSEDIA';
+        } elseif ($validateData['status'] === 'Disewa') {
+            $validateData['status'] = 'DISEWA';
+        } elseif ($validateData['status'] === 'Maintenance') {
+            $validateData['status'] = 'MAINTENANCE';
+        }
 
         if ($request->file('foto')) {
             if ($request->oldfoto) {

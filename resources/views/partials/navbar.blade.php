@@ -46,9 +46,9 @@
                     <div class="relative group hidden md:block">
                         <button class="flex items-center space-x-2 text-white hover:text-yellow-500 transition-colors">
                             <div class="w-8 h-8 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center">
-                                <span class="text-black font-semibold text-sm">{{ substr(auth()->user()->name, 0, 1) }}</span>
+                                <span class="text-black font-semibold text-sm">{{ substr(auth()->user()->nama ?? auth()->user()->username, 0, 1) }}</span>
                             </div>
-                            <span class="text-sm hidden lg:inline">{{ auth()->user()->name }}</span>
+                            <span class="text-sm hidden lg:inline">{{ auth()->user()->nama ?? auth()->user()->username }}</span>
                             <i class="fas fa-chevron-down text-xs"></i>
                         </button>
                         
@@ -58,7 +58,7 @@
                                 <i class="fas fa-user mr-2 text-yellow-500"></i>
                                 Profile
                             </a>
-                            <a href="/transaksi" class="block px-4 py-2 hover:bg-white/10 transition-colors text-white">
+                            <a href="{{ route('invoice') }}" class="block px-4 py-2 hover:bg-white/10 transition-colors text-white">
                                 <i class="fas fa-history mr-2 text-yellow-500"></i>
                                 Transaksi
                             </a>
@@ -135,7 +135,7 @@
                 <a href="/profile" class="text-white hover:text-yellow-500 transition-colors py-2 px-4 hover:bg-white/5 rounded-lg" onclick="closeMobileMenu()">
                     <i class="fas fa-user mr-3 text-yellow-500 w-5"></i>Profile
                 </a>
-                <a href="/transaksi" class="text-white hover:text-yellow-500 transition-colors py-2 px-4 hover:bg-white/5 rounded-lg" onclick="closeMobileMenu()">
+                <a href="{{ route('invoice') }}" class="text-white hover:text-yellow-500 transition-colors py-2 px-4 hover:bg-white/5 rounded-lg" onclick="closeMobileMenu()">
                     <i class="fas fa-history mr-3 text-yellow-500 w-5"></i>Transaksi
                 </a>
                 <form action="{{ route('logout') }}" method="POST" class="block">

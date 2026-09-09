@@ -14,13 +14,18 @@ class VerifikasiController extends Controller
     {
         return view('admin/verifikasi', [
             "title" => "Verifikasi",
-            "transaksi" => Verifikasi::all()
+            "transaksi" => Verifikasi::where('verifikasi', 'Requested')->get()
         ]);
     }
 
     public function approve_transaksi($id)
     {
         $status = Verifikasi::find($id);
+
+        if (!$status) {
+            return redirect()->back()->with('error', 'Transaksi tidak ditemukan.');
+        }
+
         $mobil = Mobil::where('nama_mobil', $status->nama_mobil)->first();
         $supir = Supir::where('nama', $status->nama_supir)->first();
 
@@ -41,6 +46,10 @@ class VerifikasiController extends Controller
     public function reject_transaksi($id)
     {
         $status = Verifikasi::find($id);
+
+        if (!$status) {
+            return redirect()->back()->with('error', 'Transaksi tidak ditemukan.');
+        }
 
         $status->verifikasi = 'DITOLAK';
         $status->save();

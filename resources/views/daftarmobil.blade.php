@@ -24,7 +24,7 @@
                         </div>
                         <div class="flex space-x-2">
                             <p class="text-white text-base">Harga Sewa</p>
-                            <p class="text-white text-base">: {{ $mobil->sewa }}</p>
+                            <p class="text-white text-base">: Rp {{ number_format($mobil->sewa, 0, ',', '.') }}</p>
                         </div>
                         <div class="flex space-x-12">
                             <p class="text-white text-base">Status</p>

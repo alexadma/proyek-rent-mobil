@@ -105,7 +105,8 @@
                             var supir_price = parseInt($('#supir option:selected').data('price')) || 0;
                             var durasi = parseInt($('#durasi').val()) || 24;
                             var hari = Math.max(1, Math.ceil(durasi / 24));
-                            $('#total').val((mobil_price + supir_price) * hari);
+                            var total = (mobil_price + supir_price) * hari;
+                            $('#total').val(total.toLocaleString('id-ID'));
 
                             var nopol = $('#mobil option:selected').data('nopol') || '';
                             $('#nopol').val(nopol);

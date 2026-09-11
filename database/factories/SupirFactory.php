@@ -2,10 +2,11 @@
 
 namespace Database\Factories;
 
+use App\Models\Supir;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Supir>
+ * @extends Factory<Supir>
  */
 class SupirFactory extends Factory
 {

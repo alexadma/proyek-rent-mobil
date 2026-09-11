@@ -9,5 +9,5 @@ class Verifikasi extends Model
 {
     use HasFactory;
 
-    protected $table ='transaksi';
+    protected $table = 'transaksi';
 }

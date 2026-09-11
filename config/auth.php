@@ -1,5 +1,8 @@
 <?php
 
+use App\Models\Admin;
+use App\Models\Customer;
+
 return [
 
     /*
@@ -66,12 +69,12 @@ return [
     'providers' => [
         'customers' => [
             'driver' => 'eloquent',
-            'model' => App\Models\Customer::class,
+            'model' => Customer::class,
         ],
         'admins' => [
             'driver' => 'eloquent',
-            'model' => App\Models\Admin::class,
-        ]
+            'model' => Admin::class,
+        ],
     ],
 
     /*

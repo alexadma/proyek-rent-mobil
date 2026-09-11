@@ -204,14 +204,18 @@
                             <span class="status-pill {{ $cls }}">{{ $data->verifikasi }}</span>
                         </td>
                         <td>
-                            <a onclick="return confirm('Yakin TERIMA transaksi ini?')"
-                               href="{{ url('approve_transaksi', $data->id) }}"
-                               class="btn-terima">✓ Terima</a>
+                            <form method="POST" action="{{ url('approve_transaksi', $data->id) }}"
+                                  onsubmit="return confirm('Yakin TERIMA transaksi ini?')">
+                                @csrf
+                                <button type="submit" class="btn-terima">✓ Terima</button>
+                            </form>
                         </td>
                         <td>
-                            <a onclick="return confirm('Yakin TOLAK transaksi ini?')"
-                               href="{{ url('reject_transaksi', $data->id) }}"
-                               class="btn-tolak">✕ Tolak</a>
+                            <form method="POST" action="{{ url('reject_transaksi', $data->id) }}"
+                                  onsubmit="return confirm('Yakin TOLAK transaksi ini?')">
+                                @csrf
+                                <button type="submit" class="btn-tolak">✕ Tolak</button>
+                            </form>
                         </td>
                     </tr>
                     @endforeach

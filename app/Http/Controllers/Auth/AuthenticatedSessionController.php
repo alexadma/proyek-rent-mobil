@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
-use App\Providers\RouteServiceProvider;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -25,29 +24,15 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
-        $request->validate([
-            'username' => ['required', 'string'],
-            'password' => ['required', 'string'],
-        ]);
+        $request->authenticate();
 
-        $credentials = [
-            'username' => $request->username,
-            'password' => $request->password,
-        ];
+        $request->session()->regenerate();
 
-        if (Auth::guard('admin')->attempt($credentials, $request->boolean('remember'))) {
-            $request->session()->regenerate();
+        if (Auth::guard('admin')->check()) {
             return redirect()->route('home.admin');
         }
 
-        if (Auth::guard('web')->attempt($credentials, $request->boolean('remember'))) {
-            $request->session()->regenerate();
-            return redirect()->route('home');
-        }
-
-        return back()->withErrors([
-            'username' => 'Username atau password salah.',
-        ])->onlyInput('username');
+        return redirect()->route('home');
     }
 
     /**
@@ -55,14 +40,15 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
-        if (Auth::guard('admin')->check()) {
-            Auth::guard('admin')->logout(); // Logout admin
-        }
-    
+        Auth::guard('admin')->logout();
+
         if (Auth::guard('web')->check()) {
             Auth::guard('web')->logout(); // Logout customer
         }
-    
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
         return redirect('/home');
     }
 }

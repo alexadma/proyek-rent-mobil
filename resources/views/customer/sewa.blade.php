@@ -81,9 +81,10 @@
                 </div>
 
                 <div>
+                    <label for="durasi" class="text-white">Durasi Sewa (Jam):</label>
                     <input
-                        class="durasi cursor-not-allowed shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        name="durasi" id="durasi" type="hidden" value="24">
+                        class="durasi shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        name="durasi" id="durasi" type="number" min="1" max="720" value="{{ old('durasi', 24) }}" required>
                 </div>
 
                 <div>
@@ -102,7 +103,9 @@
                         function hitungTotal() {
                             var mobil_price = parseInt($('#mobil option:selected').data('price')) || 0;
                             var supir_price = parseInt($('#supir option:selected').data('price')) || 0;
-                            $('#total').val(mobil_price + supir_price);
+                            var durasi = parseInt($('#durasi').val()) || 24;
+                            var hari = Math.max(1, Math.ceil(durasi / 24));
+                            $('#total').val((mobil_price + supir_price) * hari);
 
                             var nopol = $('#mobil option:selected').data('nopol') || '';
                             $('#nopol').val(nopol);
@@ -111,8 +114,8 @@
                         // Isi nilai awal berdasarkan pilihan pertama
                         hitungTotal();
 
-                        // Ketika pilihan mobil atau supir berubah
-                        $('#mobil, #supir').change(function() {
+                        // Ketika pilihan mobil, supir, atau durasi berubah
+                        $('#mobil, #supir, #durasi').on('change input', function() {
                             hitungTotal();
                         });
                     });

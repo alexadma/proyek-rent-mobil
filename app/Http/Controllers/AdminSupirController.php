@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Storage;
 use App\Models\Supir;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Storage;
 
 class AdminSupirController extends Controller
 {
@@ -15,7 +14,7 @@ class AdminSupirController extends Controller
     public function index()
     {
         return view('supir/homesupir', [
-            'supirs' => Supir::all()
+            'supirs' => Supir::all(),
         ]);
     }
 
@@ -37,17 +36,18 @@ class AdminSupirController extends Controller
             'nama' => 'required',
             'alamat' => 'required',
             'nohpsupir' => 'required|min:10|max:12',
-            'image' => 'image|file|max:50000'
+            'image' => 'required|image|file|max:5000',
         ]);
 
         if ($request->file('image')) {
-            $validateData['image'] = $request->file('image')->store('foto-supir');
+            $validateData['image'] = $request->file('image')->store('foto-supir', 'public');
         }
 
         Supir::create($validateData);
 
         return redirect('supir')->with('success', 'Supir Baru telah ditambahkan');
     }
+
     /**
      * Display the specified resource.
      */
@@ -62,8 +62,10 @@ class AdminSupirController extends Controller
     public function edit($noktp)
     {
         $supir = Supir::findOrFail($noktp);
+
         return view('supir/updatesupir', compact('supir'));
     }
+
     /**
      * Update the specified resource in storage.
      */
@@ -74,16 +76,16 @@ class AdminSupirController extends Controller
             'nama' => 'required',
             'alamat' => 'required',
             'nohpsupir' => 'required|min:10|max:12',
-            'image' => 'image|file|max:50000'
+            'image' => 'image|file|max:5000',
         ];
 
         $validateData = $request->validate($rules);
 
         if ($request->file('image')) {
-            if ($request->oldimage) {
-                Storage::delete($request->oldimage);
+            if ($request->oldimage && str_starts_with($request->oldimage, 'foto-supir/')) {
+                Storage::delete('foto-supir/'.basename($request->oldimage));
             }
-            $validateData['image'] = $request->file('image')->store('foto-supir');
+            $validateData['image'] = $request->file('image')->store('foto-supir', 'public');
         }
 
         Supir::where('noktp', $supir->noktp)
@@ -91,6 +93,7 @@ class AdminSupirController extends Controller
 
         return redirect('supir')->with('success', 'Data Supir  telah diupdate');
     }
+
     /**
      * Remove the specified resource from storage.
      */

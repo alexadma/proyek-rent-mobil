@@ -17,6 +17,8 @@
         @else
             <script src="https://cdn.tailwindcss.com"></script>
         @endif
+        <!-- Ensure Alpine.js is loaded for dropdowns -->
+        <script src="//unpkg.com/alpinejs" defer></script>
     </head>
     <body class="font-sans antialiased">
         <div class="min-h-screen bg-gray-100">

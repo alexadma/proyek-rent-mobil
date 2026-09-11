@@ -12,11 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('supirs', function (Blueprint $table) {
-            $table->id('noktp');
+            $table->string('noktp', 20)->primary();
             $table->string('nama');
             $table->string('alamat');
             $table->string('nohpsupir');
-            $table->string('image');
+            $table->string('image')->nullable();
             $table->integer('sewa')->default('50000');
             $table->string('status')->default('TERSEDIA');
             $table->timestamps();

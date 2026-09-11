@@ -196,9 +196,11 @@
                             <span class="status-pill {{ $cls }}">{{ $data->verifikasi }}</span>
                         </td>
                         <td>
-                            <a onclick="return confirm('Konfirmasi kendaraan sudah kembali?')"
-                               href="{{ url('pengembalian', $data->id) }}"
-                               class="btn-done">✓ Selesai</a>
+                            <form method="POST" action="{{ url('pengembalian', $data->id) }}"
+                                  onsubmit="return confirm('Konfirmasi kendaraan sudah kembali?')">
+                                @csrf
+                                <button type="submit" class="btn-done">✓ Selesai</button>
+                            </form>
                         </td>
                     </tr>
                     @endforeach

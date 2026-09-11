@@ -14,7 +14,7 @@ class AdminMobilController extends Controller
     public function index()
     {
         return view('mobil/homemobil', [
-            'mobils' => Mobil::all()
+            'mobils' => Mobil::all(),
         ]);
     }
 
@@ -38,11 +38,11 @@ class AdminMobilController extends Controller
             'type' => 'required',
             'sewa' => 'required',
             'tgl_pjk' => 'required',
-            'foto' => 'image|file|max:5000'
+            'foto' => 'required|image|file|max:5000',
         ]);
 
         if ($request->file('foto')) {
-            $validateData['foto'] = $request->file('foto')->store('foto-mobil');
+            $validateData['foto'] = $request->file('foto')->store('foto-mobil', 'public');
         }
 
         $validateData['status'] = 'TERSEDIA';
@@ -66,6 +66,7 @@ class AdminMobilController extends Controller
     public function edit($id)
     {
         $mobil = Mobil::findOrFail($id);
+
         return view('mobil/updatemobil', compact('mobil'));
     }
 
@@ -79,7 +80,7 @@ class AdminMobilController extends Controller
             'sewa' => 'required',
             'status' => 'required',
             'tgl_pjk' => 'required',
-            'foto' => 'image|file|max:5000'
+            'foto' => 'image|file|max:5000',
         ];
 
         $validateData = $request->validate($rules);
@@ -93,10 +94,10 @@ class AdminMobilController extends Controller
         }
 
         if ($request->file('foto')) {
-            if ($request->oldfoto) {
-                Storage::delete($request->oldfoto);
+            if ($request->oldfoto && str_starts_with($request->oldfoto, 'foto-mobil/')) {
+                Storage::delete('foto-mobil/'.basename($request->oldfoto));
             }
-            $validateData['foto'] = $request->file('foto')->store('foto-mobil');
+            $validateData['foto'] = $request->file('foto')->store('foto-mobil', 'public');
         }
 
         Mobil::where('id', $mobil->id)

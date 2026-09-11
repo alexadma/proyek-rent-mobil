@@ -43,8 +43,8 @@
             <div class="flex items-center gap-4">
                 @if(auth()->check() && auth()->user())
                     <!-- User Dropdown -->
-                    <div class="relative group hidden md:block">
-                        <button class="flex items-center space-x-2 text-white hover:text-yellow-500 transition-colors">
+                    <div class="relative hidden md:block" id="userDropdown">
+                        <button type="button" id="userDropdownButton" aria-expanded="false" class="flex items-center space-x-2 text-white hover:text-yellow-500 transition-colors">
                             <div class="w-8 h-8 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center">
                                 <span class="text-black font-semibold text-sm">{{ substr(auth()->user()->nama ?? auth()->user()->username, 0, 1) }}</span>
                             </div>
@@ -53,7 +53,7 @@
                         </button>
                         
                         <!-- Dropdown Menu -->
-                        <div class="absolute right-0 mt-2 w-48 bg-black/90 backdrop-blur-sm border border-white/10 rounded-xl py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
+                        <div id="userDropdownMenu" class="hidden absolute right-0 mt-2 w-48 bg-black/90 backdrop-blur-sm border border-white/10 rounded-xl py-2 shadow-xl">
                             <a href="/profile" class="block px-4 py-2 hover:bg-white/10 transition-colors text-white">
                                 <i class="fas fa-user mr-2 text-yellow-500"></i>
                                 Profile
@@ -219,6 +219,27 @@ window.addEventListener('scroll', function() {
 // Mobile menu toggle
 const mobileMenuButton = document.getElementById('mobileMenuButton');
 const mobileMenu = document.getElementById('mobileMenu');
+
+// User menu toggle
+const userDropdown = document.getElementById('userDropdown');
+const userDropdownButton = document.getElementById('userDropdownButton');
+const userDropdownMenu = document.getElementById('userDropdownMenu');
+
+if (userDropdown && userDropdownButton && userDropdownMenu) {
+    userDropdownButton.addEventListener('click', function (event) {
+        event.stopPropagation();
+        const isOpen = !userDropdownMenu.classList.contains('hidden');
+        userDropdownMenu.classList.toggle('hidden', isOpen);
+        userDropdownButton.setAttribute('aria-expanded', String(!isOpen));
+    });
+
+    document.addEventListener('click', function (event) {
+        if (!userDropdown.contains(event.target)) {
+            userDropdownMenu.classList.add('hidden');
+            userDropdownButton.setAttribute('aria-expanded', 'false');
+        }
+    });
+}
 
 function toggleMobileMenu() {
     mobileMenu.classList.toggle('open');

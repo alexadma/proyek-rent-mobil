@@ -2,44 +2,79 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Verifikasi;
 use App\Models\Mobil;
 use App\Models\Supir;
-
-use Illuminate\Http\Request;
+use App\Models\Verifikasi;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
 class VerifikasiController extends Controller
 {
     public function index()
     {
         return view('admin/verifikasi', [
-            "title" => "Verifikasi",
-            "transaksi" => Verifikasi::where('verifikasi', 'Requested')->get()
+            'title' => 'Verifikasi',
+            'transaksi' => Verifikasi::where('verifikasi', 'Requested')->get(),
         ]);
     }
 
     public function approve_transaksi($id)
     {
-        $status = Verifikasi::find($id);
+        $transaksi = Verifikasi::find($id);
 
-        if (!$status) {
+        if (! $transaksi) {
             return redirect()->back()->with('error', 'Transaksi tidak ditemukan.');
         }
 
-        $mobil = Mobil::where('nama_mobil', $status->nama_mobil)->first();
-        $supir = Supir::where('nama', $status->nama_supir)->first();
-
-        if ($mobil) {
-            $mobil->status = 'TIDAK TERSEDIA';
-            $mobil->save();
-        }
-        if ($supir) {
-            $supir->status = 'TIDAK TERSEDIA';
-            $supir->save();
+        if ($transaksi->verifikasi !== 'Requested') {
+            return redirect()->back()->with('error', 'Transaksi sudah diproses.');
         }
 
-        $status->verifikasi = 'DITERIMA';
-        $status->save();
+        try {
+            DB::transaction(function () use ($id) {
+                $sewa = Verifikasi::where('id', $id)->lockForUpdate()->first();
+
+                if ($sewa->verifikasi !== 'Requested') {
+                    throw ValidationException::withMessages(['transaksi' => 'Transaksi sudah diproses.']);
+                }
+
+                $mobil = Mobil::where('nama_mobil', $sewa->nama_mobil)->lockForUpdate()->first();
+                if ($mobil && $mobil->status === 'MAINTENANCE') {
+                    throw ValidationException::withMessages(['transaksi' => 'Mobil sedang dalam maintenance.']);
+                }
+
+                $hasConflict = Verifikasi::where('id', '!=', $sewa->id)
+                    ->where('nama_mobil', $sewa->nama_mobil)
+                    ->whereIn('verifikasi', ['DITERIMA'])
+                    ->where(function ($q) use ($sewa) {
+                        $q->whereBetween('tanggal_pinjam', [$sewa->tanggal_pinjam, $sewa->tanggal_kembali])
+                            ->orWhereBetween('tanggal_kembali', [$sewa->tanggal_pinjam, $sewa->tanggal_kembali])
+                            ->orWhere(function ($q2) use ($sewa) {
+                                $q2->where('tanggal_pinjam', '<=', $sewa->tanggal_pinjam)
+                                    ->where('tanggal_kembali', '>=', $sewa->tanggal_kembali);
+                            });
+                    })->exists();
+
+                if ($hasConflict) {
+                    throw ValidationException::withMessages(['transaksi' => 'Mobil sudah dirental pada rentang waktu tersebut oleh transaksi lain.']);
+                }
+
+                if ($mobil) {
+                    $mobil->status = 'DISEWA';
+                    $mobil->save();
+                }
+
+                Supir::where('nama', $sewa->nama_supir)
+                    ->where('status', '!=', 'MAINTENANCE')
+                    ->update(['status' => 'DISEWA']);
+
+                $sewa->verifikasi = 'DITERIMA';
+                $sewa->save();
+            });
+        } catch (ValidationException $e) {
+            return redirect()->back()->withErrors($e->errors())->withInput();
+        }
+
         return redirect()->back()->with('success', 'Transaksi Diterima');
     }
 
@@ -47,12 +82,17 @@ class VerifikasiController extends Controller
     {
         $status = Verifikasi::find($id);
 
-        if (!$status) {
+        if (! $status) {
             return redirect()->back()->with('error', 'Transaksi tidak ditemukan.');
+        }
+
+        if ($status->verifikasi !== 'Requested') {
+            return redirect()->back()->with('error', 'Transaksi sudah diproses.');
         }
 
         $status->verifikasi = 'DITOLAK';
         $status->save();
+
         return redirect()->back()->with('success', 'Transaksi Ditolak');
     }
     // public function pengembalian($id)

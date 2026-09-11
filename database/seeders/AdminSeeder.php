@@ -2,8 +2,6 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use App\Models\User;
 use App\Models\Admin;
 use Illuminate\Database\Seeder;
 
@@ -14,11 +12,19 @@ class AdminSeeder extends Seeder
      */
     public function run(): void
     {
-        Admin::create([
-            'username' => 'admin1',
-            'nama' => 'Admin',
-            'alamat' => 'Jakarta',
-            'password' => bcrypt('123456'),
-        ]);
+        $password = 'Admin@123456';
+
+        Admin::updateOrCreate(
+            ['username' => 'admin1'],
+            [
+                'nama' => 'Admin',
+                'alamat' => 'Jakarta',
+                'password' => bcrypt($password),
+            ]
+        );
+
+        if ($this->command) {
+            $this->command->warn('Login admin => username: admin1, password: '.$password);
+        }
     }
 }

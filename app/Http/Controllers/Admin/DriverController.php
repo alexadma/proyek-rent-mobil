@@ -3,14 +3,15 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Driver;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 
 class DriverController extends Controller
 {
     public function index()
     {
         $driver = Driver::all();
+
         return view('admin.cars.index', compact('cars'));
     }
 

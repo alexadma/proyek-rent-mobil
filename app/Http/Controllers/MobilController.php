@@ -2,18 +2,16 @@
 
 namespace App\Http\Controllers;
 
-//importt model "Mobil"
+// importt model "Mobil"
 use App\Models\Mobil;
-
-use Illuminate\Http\Request;
 
 class MobilController extends Controller
 {
     public function index()
     {
         return view('daftarmobil', [
-            "title" => "Daftar Mobil",
-            "mobil" => Mobil::all()
+            'title' => 'Daftar Mobil',
+            'mobil' => Mobil::all(),
         ]);
     }
 }

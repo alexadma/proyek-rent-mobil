@@ -1,7 +1,6 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\AdminMobilController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -13,18 +12,22 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-use App\Http\Controllers\AdminMobilController;
 use App\Http\Controllers\AdminSupirController;
-use App\Http\Controllers\MobilController;
 use App\Http\Controllers\HomeAwal;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\KeuanganController;
+use App\Http\Controllers\MobilController;
 use App\Http\Controllers\PengembalianController;
 use App\Http\Controllers\SewaController;
+use App\Http\Controllers\StorageFileController;
 use App\Http\Controllers\VerifikasiController;
+use Illuminate\Support\Facades\Route;
+use Rap2hpoutre\LaravelLogViewer\LogViewerController;
+
+Route::get('storage/{path}', [StorageFileController::class, 'show'])->where('path', '.*');
 
 Route::middleware('auth:admin')->group(function () {
-    Route::get('logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'index']);
+    Route::get('logs', [LogViewerController::class, 'index']);
 });
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
@@ -49,11 +52,11 @@ Route::middleware('auth:admin')->group(function () {
     Route::resource('/supir', AdminSupirController::class);
 
     Route::get('/transaksi', [VerifikasiController::class, 'index'])->name('transaksi');
-    Route::get('/approve_transaksi/{id}', [VerifikasiController::class, 'approve_transaksi']);
-    Route::get('/reject_transaksi/{id}', [VerifikasiController::class, 'reject_transaksi']);
+    Route::post('/approve_transaksi/{id}', [VerifikasiController::class, 'approve_transaksi'])->name('approve.transaksi');
+    Route::post('/reject_transaksi/{id}', [VerifikasiController::class, 'reject_transaksi'])->name('reject.transaksi');
     Route::get('/pengembalian', [PengembalianController::class, 'index'])->name('pengembalian');
-    Route::get('/pengembalian/{id}', [PengembalianController::class, 'pengembalian_selesai']);
+    Route::post('/pengembalian/{id}', [PengembalianController::class, 'pengembalian_selesai'])->name('pengembalian.selesai');
     Route::get('/keuangan', [KeuanganController::class, 'index'])->name('keuangan');
 });
 
-require __DIR__ . '/auth.php';
+require __DIR__.'/auth.php';

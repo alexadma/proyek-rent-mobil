@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('status')->default('TERSEDIA');
             $table->string('warna');
             $table->integer('sewa');
-            $table->string('foto');
+            $table->string('foto')->nullable();
             $table->timestamps();
         });
     }

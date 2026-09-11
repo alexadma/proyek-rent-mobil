@@ -19,6 +19,6 @@ class Mobil extends Model
         'status',
         'warna',
         'sewa',
-        'foto'
+        'foto',
     ];
 }

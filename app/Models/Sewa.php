@@ -13,6 +13,7 @@ class Sewa extends Model
 
     protected $fillable = [
         'no_invoice',
+        'customer_id',
         'nama_customer',
         'nohp',
         'alamat',
@@ -24,7 +25,7 @@ class Sewa extends Model
         'tanggal_kembali',
         'total_biaya',
         'bukti',
-        'verifikasi'
+        'verifikasi',
     ];
 
     public function getHargaMobil()

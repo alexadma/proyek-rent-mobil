@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -11,7 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        //
+        if (Schema::getConnection()->getDriverName() === 'mysql'
+            && Schema::hasTable('transaksi')
+            && Schema::hasColumn('transaksi', 'bukti')) {
+            DB::statement('ALTER TABLE transaksi MODIFY bukti VARCHAR(255) NULL');
+        }
     }
 
     /**
@@ -19,6 +23,10 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        if (Schema::getConnection()->getDriverName() === 'mysql'
+            && Schema::hasTable('transaksi')
+            && Schema::hasColumn('transaksi', 'bukti')) {
+            DB::statement('ALTER TABLE transaksi MODIFY bukti VARCHAR(255) NOT NULL');
+        }
     }
 };

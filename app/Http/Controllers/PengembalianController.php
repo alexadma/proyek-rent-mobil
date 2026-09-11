@@ -2,43 +2,47 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Verifikasi;
 use App\Models\Mobil;
 use App\Models\Supir;
-
-use Illuminate\Http\Request;
+use App\Models\Verifikasi;
+use Illuminate\Support\Facades\DB;
 
 class PengembalianController extends Controller
 {
     public function index()
     {
-        $status = Verifikasi::where('verifikasi','DITERIMA')->get();
-        return view('admin/pengembalian',compact('status')); 
+        $status = Verifikasi::where('verifikasi', 'DITERIMA')->get();
+
+        return view('admin/pengembalian', compact('status'));
     }
 
     public function pengembalian_selesai($id)
     {
-        $status = Verifikasi::find($id);
+        $transaksi = Verifikasi::find($id);
 
-        if (!$status) {
+        if (! $transaksi) {
             return redirect()->back()->with('error', 'Transaksi tidak ditemukan.');
         }
 
-        $mobil = Mobil::where('nama_mobil', $status->nama_mobil)->first();
-        $supir = Supir::where('nama', $status->nama_supir)->first();
-
-        if ($mobil) {
-            $mobil->status = 'TERSEDIA';
-            $mobil->save();
+        if ($transaksi->verifikasi !== 'DITERIMA') {
+            return redirect()->back()->with('error', 'Transaksi tidak dalam status disewakan.');
         }
 
-        if ($supir) {
-            $supir->status = 'TERSEDIA';
-            $supir->save();
-        }
+        DB::transaction(function () use ($id) {
+            $sewa = Verifikasi::where('id', $id)->lockForUpdate()->first();
 
-        $status->verifikasi = 'SELESAI';
-        $status->save();
+            if ($sewa->verifikasi !== 'DITERIMA') {
+                return;
+            }
+
+            Mobil::where('nama_mobil', $sewa->nama_mobil)->update(['status' => 'TERSEDIA']);
+
+            Supir::where('nama', $sewa->nama_supir)->update(['status' => 'TERSEDIA']);
+
+            $sewa->verifikasi = 'SELESAI';
+            $sewa->save();
+        });
+
         return redirect()->back()->with('success', 'Transaksi Selesai');
     }
 }

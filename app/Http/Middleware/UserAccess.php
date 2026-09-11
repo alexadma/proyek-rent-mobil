@@ -12,7 +12,7 @@ class UserAccess
     /**
      * Handle an incoming request.
      *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param  Closure(Request): (Response)  $next
      */
     public function handle($request, Closure $next, $role)
     {
@@ -21,7 +21,7 @@ class UserAccess
         }
 
         return response()->json(['error' => 'Unauthorized'], 403);
-        
+
         if (auth()->check() && auth()->user()->is_admin) {
             return $next($request);
         }

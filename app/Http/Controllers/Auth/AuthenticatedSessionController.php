@@ -24,11 +24,11 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
-        $request->authenticate();
+        $guard = $request->authenticate();
 
         $request->session()->regenerate();
 
-        if (Auth::guard('admin')->check()) {
+        if ($guard === 'admin') {
             return redirect()->route('home.admin');
         }
 

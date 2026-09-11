@@ -38,16 +38,24 @@ class LoginRequest extends FormRequest
      *
      * @throws ValidationException
      */
-    public function authenticate(): void
+    public function authenticate(): string
     {
         $this->ensureIsNotRateLimited();
 
         $credentials = $this->only('username', 'password');
 
-        $isAdmin = Auth::guard('admin')->attempt($credentials, $this->boolean('remember'));
+        Auth::guard('admin')->logout();
+        Auth::guard('web')->logout();
+
+        if (Auth::guard('admin')->attempt($credentials, $this->boolean('remember'))) {
+            RateLimiter::clear($this->throttleKey());
+
+            return 'admin';
+        }
+
         $isCustomer = Auth::guard('web')->attempt($credentials, $this->boolean('remember'));
 
-        if (! $isAdmin && ! $isCustomer) {
+        if (! $isCustomer) {
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
@@ -56,6 +64,8 @@ class LoginRequest extends FormRequest
         }
 
         RateLimiter::clear($this->throttleKey());
+
+        return 'web';
     }
 
     /**

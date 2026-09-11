@@ -119,6 +119,12 @@
                         </select>
                     </div>
                 </div>
+                <div class="fgroup">
+                    <label>Tanggal Pajak Kendaraan</label>
+                    <input type="date" class="fcontrol @error('tgl_pjk') is-invalid @enderror"
+                        name="tgl_pjk" value="{{ old('tgl_pjk', $mobil->tgl_pjk) }}">
+                    @error('tgl_pjk')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                </div>
 
                 <div class="section-label">Foto Kendaraan</div>
                 <div class="fgroup">

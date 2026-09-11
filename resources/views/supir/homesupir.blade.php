@@ -9,7 +9,7 @@
         --border: rgba(201,168,76,0.15); --muted: #555;
     }
     body { background: var(--dark); font-family: 'DM Sans', sans-serif; }
-    .page-wrap { padding: 2rem 1.5rem; animation: fadeUp .5s ease both; }
+    .page-wrap { max-width: 1600px; margin: 0 auto; padding: 2.5rem clamp(1rem, 3vw, 2.5rem); animation: fadeUp .5s ease both; }
     @keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
 
     /* HEADER */
@@ -87,6 +87,7 @@
         <div>
             <div class="page-eyebrow">Manajemen</div>
             <h1 class="page-title">Daftar Driver</h1>
+            <p style="color:#777;font-size:.85rem;margin:.35rem 0 0;">Kelola driver yang mendukung perjalanan pelanggan</p>
         </div>
         <a href="{{ route('supir.create') }}" class="btn-add">+ Tambah Driver</a>
     </div>

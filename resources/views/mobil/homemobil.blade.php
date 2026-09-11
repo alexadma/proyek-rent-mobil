@@ -9,7 +9,7 @@
         --border:rgba(201,168,76,0.15); --muted:#555; --green:#22c55e;
     }
     body{background:var(--dark);font-family:'DM Sans',sans-serif;}
-    .page-wrap{padding:2rem 1.5rem;animation:fadeUp .5s ease both;}
+    .page-wrap{max-width:1600px;margin:0 auto;padding:2.5rem clamp(1rem,3vw,2.5rem);animation:fadeUp .5s ease both;}
     @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 
     .page-top{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;margin-bottom:2rem;}
@@ -67,6 +67,7 @@
         <div>
             <div class="page-eyebrow">Manajemen</div>
             <h1 class="page-title">Armada Mobil</h1>
+            <p style="color:#777;font-size:.85rem;margin:.35rem 0 0;">Kelola kendaraan yang tersedia untuk disewakan</p>
             <div class="total-badge">🚗 {{ $mobils->count() }} kendaraan terdaftar</div>
         </div>
         <a href="{{ route('mobil.create') }}" class="btn-add">+ Tambah Armada</a>

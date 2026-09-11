@@ -16,9 +16,9 @@
     }
     body { background: var(--dark); font-family: 'DM Sans', sans-serif; }
 
-    .page-wrap { padding: 2rem 1.5rem; animation: fadeUp .5s ease both; }
+    .page-wrap { max-width: 1600px; margin: 0 auto; padding: 2.5rem clamp(1rem, 3vw, 2.5rem); animation: fadeUp .5s ease both; }
 
-    .page-header { margin-bottom: 2rem; }
+    .page-header { display: flex; align-items: flex-end; justify-content: space-between; gap: 1.5rem; margin-bottom: 1.5rem; }
     .page-eyebrow {
         font-size: .65rem; font-weight: 700; letter-spacing: .16em;
         color: var(--gold); text-transform: uppercase; margin-bottom: .5rem;
@@ -44,6 +44,10 @@
     }
     @keyframes blink { 0%,100% { opacity:1; } 50% { opacity:.2; } }
 
+    .header-stat { min-width: 150px; padding: 1rem 1.2rem; border: 1px solid var(--border); border-radius: 16px; background: linear-gradient(145deg, rgba(201,168,76,.1), rgba(255,255,255,.02)); text-align: right; }
+    .header-stat-label { display: block; color: #666; font-size: .65rem; letter-spacing: .1em; text-transform: uppercase; }
+    .header-stat-value { display: block; margin-top: .25rem; color: #fff; font-family: 'Syne', sans-serif; font-size: 1.5rem; font-weight: 800; }
+
     /* TABLE CARD */
     .table-card {
         background: var(--dark-2); border: 1px solid var(--border);
@@ -53,9 +57,10 @@
     .table-card-header {
         padding: 1.4rem 1.8rem; border-bottom: 1px solid var(--border);
         background: linear-gradient(135deg, #0d0a00, var(--dark-2));
-        display: flex; align-items: center; justify-content: space-between;
+        display: flex; align-items: center; justify-content: space-between; gap: 1rem;
     }
     .table-card-title { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; color: #fff; }
+    .table-card-note { color: #666; font-size: .75rem; }
 
     /* DATATABLES */
     .dataTables_wrapper .dataTables_length,
@@ -127,7 +132,19 @@
     }
     .btn-tolak:hover { transform: scale(1.05); color: #fff; text-decoration: none; box-shadow: 0 4px 16px rgba(220,38,38,.3); }
 
-    @media(max-width: 768px) { .page-wrap { padding: 1.5rem 1rem; } }
+    .empty-state { padding: 4rem 1.5rem; text-align: center; color: #777; }
+    .empty-state-icon { width: 52px; height: 52px; display: grid; place-items: center; margin: 0 auto 1rem; border: 1px solid var(--border); border-radius: 16px; color: var(--gold); font-size: 1.4rem; background: rgba(201,168,76,.06); }
+    .empty-state strong { display: block; color: #ddd; font-family: 'Syne', sans-serif; font-size: 1rem; }
+    .empty-state p { margin: .35rem 0 0; font-size: .8rem; }
+
+    @media(max-width: 768px) {
+        .page-wrap { padding: 1.5rem 1rem; }
+        .page-header { display: block; }
+        .header-stat { margin-top: 1rem; text-align: left; }
+        .table-card { border-radius: 16px; }
+        .table-card-header { padding: 1.1rem 1rem; }
+        .table-card-note { display: none; }
+    }
 
     @keyframes fadeUp {
         from { opacity:0; transform: translateY(16px); }
@@ -142,15 +159,17 @@
         <div class="page-eyebrow">Admin</div>
         <h1 class="page-title">Verifikasi Transaksi</h1>
         <p class="page-sub">Tinjau dan konfirmasi setiap permintaan sewa yang masuk</p>
-        <div class="pending-badge">
-            <span class="pending-dot"></span>
-            {{ $transaksi->count() }} menunggu verifikasi
+        <div class="pending-badge"><span class="pending-dot"></span>{{ $transaksi->count() }} menunggu verifikasi</div>
+        <div class="header-stat">
+            <span class="header-stat-label">Total antrean</span>
+            <span class="header-stat-value">{{ $transaksi->count() }}</span>
         </div>
     </div>
 
     <div class="table-card">
         <div class="table-card-header">
             <div class="table-card-title">🔍 Antrian Verifikasi</div>
+            <div class="table-card-note">Periksa bukti pembayaran sebelum mengambil keputusan</div>
         </div>
         <div style="overflow-x: auto;">
             <table id="verifikasiTable">
@@ -171,6 +190,9 @@
                     </tr>
                 </thead>
                 <tbody>
+                    @if($transaksi->isEmpty())
+                    <tr><td colspan="12"><div class="empty-state"><div class="empty-state-icon">✓</div><strong>Semua transaksi sudah ditinjau</strong><p>Belum ada permintaan sewa baru yang menunggu verifikasi.</p></div></td></tr>
+                    @endif
                     @foreach($transaksi as $data)
                     <tr>
                         <td><span class="invoice-tag">{{ $data->no_invoice }}</span></td>

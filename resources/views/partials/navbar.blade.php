@@ -54,7 +54,7 @@
                         
                         <!-- Dropdown Menu -->
                         <div id="userDropdownMenu" class="hidden absolute right-0 mt-2 w-48 bg-black/90 backdrop-blur-sm border border-white/10 rounded-xl py-2 shadow-xl">
-                            <a href="/profile" class="block px-4 py-2 hover:bg-white/10 transition-colors text-white">
+                            <a href="{{ route('profile') }}" class="block px-4 py-2 hover:bg-white/10 transition-colors text-white">
                                 <i class="fas fa-user mr-2 text-yellow-500"></i>
                                 Profile
                             </a>
@@ -132,7 +132,7 @@
                 </a>
             @else
                 <hr class="border-white/10 my-2">
-                <a href="/profile" class="text-white hover:text-yellow-500 transition-colors py-2 px-4 hover:bg-white/5 rounded-lg" onclick="closeMobileMenu()">
+                <a href="{{ route('profile') }}" class="text-white hover:text-yellow-500 transition-colors py-2 px-4 hover:bg-white/5 rounded-lg" onclick="closeMobileMenu()">
                     <i class="fas fa-user mr-3 text-yellow-500 w-5"></i>Profile
                 </a>
                 <a href="{{ route('invoice') }}" class="text-white hover:text-yellow-500 transition-colors py-2 px-4 hover:bg-white/5 rounded-lg" onclick="closeMobileMenu()">

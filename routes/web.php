@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminMobilController;
+use App\Http\Controllers\ProfileController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -43,6 +44,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/sewa', [SewaController::class, 'store'])->name('sewa.store');
     Route::get('/invoice', [SewaController::class, 'invoice'])->name('invoice');
     Route::post('/invoice', [SewaController::class, 'updateInvoice']);
+
+    // Profile Customer
+    Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
+    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
 });
 
 // Area admin (wajib login sebagai admin)

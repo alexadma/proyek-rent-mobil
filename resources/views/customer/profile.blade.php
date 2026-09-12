@@ -53,10 +53,10 @@
             @endif
 
             {{-- =================== PROFILE CARD =================== --}}
-            <div class="glass-effect-dark rounded-3xl overflow-hidden border border-white/5" data-aos="fade-up" data-aos-delay="100">
+            <div class="glass-effect-dark rounded-3xl overflow-hidden border border-white/5" data-aos="fade-up" data-aos-delay="100" x-data="profileController()">
 
                 {{-- Avatar Header --}}
-                <div class="relative px-6 sm:px-8 pt-8 pb-6">
+                <div class="relative px-6 sm:px-8 pt-8 pb-6" x-show="!isEditing" x-transition>
                     <div class="absolute inset-0 bg-gradient-to-b from-yellow-500/5 to-transparent pointer-events-none"></div>
                     <div class="relative flex flex-col sm:flex-row items-center gap-6">
                         {{-- Photo Section --}}
@@ -73,18 +73,6 @@
                                          class="w-full h-full object-cover"
                                          x-transition:opacity>
                                 </div>
-
-                                {{-- Change Photo Button --}}
-                                <label class="absolute -bottom-2 -right-2 w-10 h-10 bg-yellow-500 hover:bg-yellow-600 rounded-xl flex items-center justify-center ring-4 ring-black/50 cursor-pointer transition-all duration-200 hover:scale-105 shadow-lg"
-                                     title="Ganti Foto Profil">
-                                    <input type="file"
-                                           name="foto"
-                                           id="photoInput"
-                                           accept="image/jpeg,image/png,image/jpg,image/webp"
-                                           class="hidden"
-                                           @change="handleFileSelect($event)">
-                                    <i class="fas fa-camera text-white text-sm"></i>
-                                </label>
                             </div>
                         </div>
 
@@ -103,7 +91,7 @@
                 </div>
 
                 {{-- ========== VIEW MODE ========== --}}
-                <div id="profileView" class="px-6 sm:px-8 pb-8" x-data="profileController()" x-init="initViewMode()">
+                <div id="profileView" class="px-6 sm:px-8 pb-8" x-init="initViewMode()">
                     {{-- Profile Information Section --}}
                     <section class="mb-8" x-show="!isEditing" x-transition>
                         <div class="flex items-center justify-between mb-5">
@@ -198,10 +186,9 @@
                             <div class="absolute inset-0 bg-gradient-to-r from-yellow-500 to-yellow-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                         </button>
                     </div>
-                </div>
 
                 {{-- ========== EDIT MODE ========== --}}
-                <form id="profileForm" class="hidden px-6 sm:px-8 pb-8"
+                <form id="profileForm" class="px-6 sm:px-8 pb-8"
                       action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data"
                       x-show="isEditing" x-transition
                       @submit.prevent="submitForm">
@@ -393,6 +380,7 @@
                         </button>
                     </div>
                 </form>
+                </div>
 
             </div>
 
@@ -435,14 +423,14 @@ window.customerData = {
     email: @json($customer->email),
     nohp: @json($customer->nohp),
     alamat: @json($customer->alamat),
-    foto: @json($customer->foto ? asset('storage/' . $customer->foto) : null),
+    foto: @json($customer->foto ? asset($customer->foto) : null),
     initial: @json(strtoupper(substr($customer->nama ?? $customer->username, 0, 1))),
     memberSince: @json('Member sejak ' . $customer->created_at->format('d M Y'))
 };
 
 function photoPreview() {
     return {
-        photoPreviewSrc: null,
+        photoPreviewSrc: window.customerData.foto || null,
         initial: window.customerData.initial,
         customerName: window.customerData.nama || window.customerData.username,
         customerEmail: window.customerData.email,
@@ -487,6 +475,9 @@ function profileController() {
     return {
         isEditing: false,
         saving: false,
+        customerName: window.customerData.nama || window.customerData.username,
+        customerEmail: window.customerData.email,
+        memberSince: window.customerData.memberSince,
         profileData: {
             nama: window.customerData.nama,
             username: window.customerData.username,

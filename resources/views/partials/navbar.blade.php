@@ -11,7 +11,7 @@
             
             <!-- Desktop Menu -->
             <div class="hidden md:flex items-center space-x-8">
-                <a class="text-white no-underline hover:text-yellow-500 transition-colors relative group" href="#home">
+                <a class="text-white no-underline hover:text-yellow-500 transition-colors relative group" href="{{ request()->routeIs('home') ? '#home' : '/home#home' }}">
                     Home
                     <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-yellow-500 group-hover:w-full transition-all duration-300"></span>
                 </a>
@@ -28,12 +28,12 @@
                     </a>
                 @endif
                 
-                <a class="text-white no-underline hover:text-yellow-500 transition-colors relative group" href="#about-section">
+                <a class="text-white no-underline hover:text-yellow-500 transition-colors relative group" href="{{ request()->routeIs('home') ? '#about-section' : '/home#about-section' }}">
                     About
                     <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-yellow-500 group-hover:w-full transition-all duration-300"></span>
                 </a>
                 
-                <a class="text-white no-underline hover:text-yellow-500 transition-colors relative group" href="#contact-section">
+                <a class="text-white no-underline hover:text-yellow-500 transition-colors relative group" href="{{ request()->routeIs('home') ? '#contact-section' : '/home#contact-section' }}">
                     Contact
                     <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-yellow-500 group-hover:w-full transition-all duration-300"></span>
                 </a>
@@ -100,7 +100,7 @@
     <!-- Mobile Menu -->
     <div class="mobile-menu hidden md:hidden bg-black/95 backdrop-blur-sm border-t border-white/10 py-4 px-6" id="mobileMenu">
         <div class="flex flex-col space-y-3">
-            <a href="#home" class="text-white hover:text-yellow-500 transition-colors py-2 px-4 hover:bg-white/5 rounded-lg" onclick="closeMobileMenu()">
+            <a href="{{ request()->routeIs('home') ? '#home' : '/home#home' }}" class="text-white hover:text-yellow-500 transition-colors py-2 px-4 hover:bg-white/5 rounded-lg" onclick="closeMobileMenu()">
                 <i class="fas fa-home mr-3 text-yellow-500 w-5"></i>Home
             </a>
             
@@ -114,11 +114,11 @@
                 </a>
             @endif
             
-            <a href="#about-section" class="text-white hover:text-yellow-500 transition-colors py-2 px-4 hover:bg-white/5 rounded-lg" onclick="closeMobileMenu()">
+            <a href="{{ request()->routeIs('home') ? '#about-section' : '/home#about-section' }}" class="text-white hover:text-yellow-500 transition-colors py-2 px-4 hover:bg-white/5 rounded-lg" onclick="closeMobileMenu()">
                 <i class="fas fa-info-circle mr-3 text-yellow-500 w-5"></i>About
             </a>
             
-            <a href="#contact-section" class="text-white hover:text-yellow-500 transition-colors py-2 px-4 hover:bg-white/5 rounded-lg" onclick="closeMobileMenu()">
+            <a href="{{ request()->routeIs('home') ? '#contact-section' : '/home#contact-section' }}" class="text-white hover:text-yellow-500 transition-colors py-2 px-4 hover:bg-white/5 rounded-lg" onclick="closeMobileMenu()">
                 <i class="fas fa-envelope mr-3 text-yellow-500 w-5"></i>Contact
             </a>
             

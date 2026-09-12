@@ -42,11 +42,19 @@ class ProfileController extends Controller
 
         // Handle photo upload
         if ($request->hasFile('foto')) {
-            // Delete old photo if exists
-            if ($customer->foto && Storage::disk('public')->exists($customer->foto)) {
-                Storage::disk('public')->delete($customer->foto);
+            $fotoDir = public_path('foto-profile');
+            if (!is_dir($fotoDir)) {
+                mkdir($fotoDir, 0755, true);
             }
-            $validated['foto'] = $request->file('foto')->store('foto-profile', 'public');
+
+            // Delete old photo if exists
+            if ($customer->foto && file_exists(public_path($customer->foto))) {
+                unlink(public_path($customer->foto));
+            }
+
+            $filename = time() . '_' . $request->file('foto')->getClientOriginalName();
+            $request->file('foto')->move($fotoDir, $filename);
+            $validated['foto'] = 'foto-profile/' . $filename;
         }
 
         if ($request->filled('password')) {
@@ -67,7 +75,7 @@ class ProfileController extends Controller
                     'email' => $customer->email,
                     'nohp' => $customer->nohp,
                     'alamat' => $customer->alamat,
-                    'foto' => $customer->foto ? asset('storage/' . $customer->foto) : null,
+                    'foto' => $customer->foto ? asset($customer->foto) : null,
                 ]
             ]);
         }

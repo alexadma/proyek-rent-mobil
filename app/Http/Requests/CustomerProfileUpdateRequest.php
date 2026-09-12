@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Models\Customer;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 
 class CustomerProfileUpdateRequest extends FormRequest
@@ -22,6 +23,7 @@ class CustomerProfileUpdateRequest extends FormRequest
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', Rule::unique(Customer::class)->ignore($customerId)],
             'nohp' => ['required', 'string', 'max:20', 'regex:/^[\d\s\-\+\(\)]+$/'],
             'alamat' => ['required', 'string', 'max:500'],
+            'foto' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
             'password' => ['nullable', 'string', 'min:8', 'confirmed'],
         ];
     }
@@ -36,6 +38,9 @@ class CustomerProfileUpdateRequest extends FormRequest
             'nohp.required' => 'Nomor telepon wajib diisi.',
             'nohp.regex' => 'Format nomor telepon tidak valid.',
             'alamat.required' => 'Alamat wajib diisi.',
+            'foto.image' => 'File harus berupa gambar.',
+            'foto.mimes' => 'Format gambar harus JPEG, PNG, JPG, atau WEBP.',
+            'foto.max' => 'Ukuran gambar maksimal 2MB.',
             'password.min' => 'Password minimal 8 karakter.',
             'password.confirmed' => 'Konfirmasi password tidak cocok.',
         ];

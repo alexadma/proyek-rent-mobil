@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CustomerProfileUpdateRequest;
 use App\Models\Customer;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class ProfileController extends Controller
@@ -25,15 +27,27 @@ class ProfileController extends Controller
         ]);
     }
 
-    public function update(CustomerProfileUpdateRequest $request): RedirectResponse
+    public function update(CustomerProfileUpdateRequest $request)
     {
         $customer = Auth::guard('web')->user();
 
         if (! $customer) {
+            if ($request->expectsJson()) {
+                return response()->json(['success' => false, 'message' => 'Silakan login terlebih dahulu.'], 401);
+            }
             return redirect()->route('login')->with('fail', 'Silakan login terlebih dahulu.');
         }
 
         $validated = $request->validated();
+
+        // Handle photo upload
+        if ($request->hasFile('foto')) {
+            // Delete old photo if exists
+            if ($customer->foto && Storage::disk('public')->exists($customer->foto)) {
+                Storage::disk('public')->delete($customer->foto);
+            }
+            $validated['foto'] = $request->file('foto')->store('foto-profile', 'public');
+        }
 
         if ($request->filled('password')) {
             $validated['password'] = Hash::make($validated['password']);
@@ -42,6 +56,21 @@ class ProfileController extends Controller
         }
 
         $customer->update($validated);
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Profile berhasil diperbarui.',
+                'data' => [
+                    'nama' => $customer->nama,
+                    'username' => $customer->username,
+                    'email' => $customer->email,
+                    'nohp' => $customer->nohp,
+                    'alamat' => $customer->alamat,
+                    'foto' => $customer->foto ? asset('storage/' . $customer->foto) : null,
+                ]
+            ]);
+        }
 
         return redirect()->route('profile')->with('success', 'Profile berhasil diperbarui.');
     }

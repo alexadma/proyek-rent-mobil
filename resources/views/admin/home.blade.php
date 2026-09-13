@@ -490,6 +490,8 @@
     .badge-success { background: rgba(16, 185, 129, 0.1); color: var(--success); }
     .badge-warning { background: rgba(245, 158, 11, 0.1); color: var(--warning); }
     .badge-info { background: rgba(59, 130, 246, 0.1); color: var(--info); }
+    .badge-danger { background: rgba(239, 68, 68, 0.1); color: var(--danger); }
+    .badge-secondary { background: rgba(136, 136, 136, 0.1); color: var(--text-muted); }
 
     /* RESPONSIVE */
     @media (max-width: 1024px) {
@@ -579,10 +581,10 @@
                 <div class="stat-icon">
                     <i class="fas fa-shopping-cart"></i>
                 </div>
-                <div class="stat-value">24</div>
+                <div class="stat-value">{{ $transaksiPending ?? 0 }}</div>
                 <div class="stat-label">Pesanan Baru</div>
                 <div class="stat-trend">
-                    <i class="fas fa-arrow-up"></i> +12% dari kemarin
+                    <i class="fas fa-clock"></i> Menunggu verifikasi
                 </div>
             </div>
             
@@ -590,10 +592,10 @@
                 <div class="stat-icon">
                     <i class="fas fa-car"></i>
                 </div>
-                <div class="stat-value">18</div>
+                <div class="stat-value">{{ $mobilTersedia ?? 0 }}</div>
                 <div class="stat-label">Armada Tersedia</div>
                 <div class="stat-trend">
-                    <i class="fas fa-check-circle"></i> 6 sedang disewa
+                    <i class="fas fa-check-circle"></i> dari {{ $totalMobil ?? 0 }} total
                 </div>
             </div>
             
@@ -601,10 +603,10 @@
                 <div class="stat-icon">
                     <i class="fas fa-users"></i>
                 </div>
-                <div class="stat-value">156</div>
-                <div class="stat-label">Total Pelanggan</div>
+                <div class="stat-value">{{ $totalSupir ?? 0 }}</div>
+                <div class="stat-label">Supir Aktif</div>
                 <div class="stat-trend">
-                    <i class="fas fa-arrow-up"></i> +8 minggu ini
+                    <i class="fas fa-user-check"></i> Siap melayani
                 </div>
             </div>
             
@@ -612,10 +614,10 @@
                 <div class="stat-icon">
                     <i class="fas fa-chart-line"></i>
                 </div>
-                <div class="stat-value">Rp 89jt</div>
-                <div class="stat-label">Pendapatan Bulan Ini</div>
+                <div class="stat-value">Rp {{ number_format(($totalPendapatan ?? 0) / 1000000, 1, ',', '.') }}jt</div>
+                <div class="stat-label">Total Pendapatan</div>
                 <div class="stat-trend">
-                    <i class="fas fa-arrow-up"></i> +15% dari target
+                    <i class="fas fa-receipt"></i> {{ $transaksiDiterima ?? 0 }} transaksi aktif
                 </div>
             </div>
         </div>
@@ -685,57 +687,70 @@
             </a>
         </div>
 
-        <div class="activity-item">
-            <div class="activity-icon">
-                <i class="fas fa-plus"></i>
-            </div>
-            <div class="activity-content">
-                <div class="activity-text">Armada baru ditambahkan - Toyota Avanza 2023</div>
-                <div class="activity-time">
-                    <i class="far fa-clock"></i> 5 menit yang lalu
+        @if($recentActivities->isEmpty())
+            <div class="activity-item">
+                <div class="activity-icon">
+                    <i class="fas fa-inbox"></i>
+                </div>
+                <div class="activity-content">
+                    <div class="activity-text">Belum ada aktivitas terbaru</div>
+                    <div class="activity-time">
+                        <i class="far fa-clock"></i> —
+                    </div>
                 </div>
             </div>
-            <span class="activity-badge badge-success">Selesai</span>
-        </div>
+        @else
+            @foreach($recentActivities as $akt)
+                @php
+                    $verif = $akt->verifikasi;
+                    if ($verif === 'Requested') {
+                        $badgeClass = 'badge-warning';
+                        $badgeText = 'Menunggu';
+                        $icon = 'fa-clock';
+                    } elseif ($verif === 'DITERIMA') {
+                        $badgeClass = 'badge-success';
+                        $badgeText = 'Diterima';
+                        $icon = 'fa-check-circle';
+                    } elseif ($verif === 'SELESAI') {
+                        $badgeClass = 'badge-info';
+                        $badgeText = 'Selesai';
+                        $icon = 'fa-flag-checkered';
+                    } elseif ($verif === 'DITOLAK') {
+                        $badgeClass = 'badge-danger';
+                        $badgeText = 'Ditolak';
+                        $icon = 'fa-times-circle';
+                    } else {
+                        $badgeClass = 'badge-secondary';
+                        $badgeText = $verif;
+                        $icon = 'fa-info-circle';
+                    }
 
-        <div class="activity-item">
-            <div class="activity-icon">
-                <i class="fas fa-shopping-cart"></i>
-            </div>
-            <div class="activity-content">
-                <div class="activity-text">Pesanan baru #INV-2024-001 dari Budi Santoso</div>
-                <div class="activity-time">
-                    <i class="far fa-clock"></i> 30 menit yang lalu
+                    $timeDiff = $akt->created_at->diffForHumans();
+                    $durasiJam = \Carbon\Carbon::parse($akt->tanggal_pinjam)->diffInHours(\Carbon\Carbon::parse($akt->tanggal_kembali));
+                    $hari = floor($durasiJam / 24);
+                    $jam = $durasiJam % 24;
+                    $durasiText = $hari > 0 ? $hari.' Hari' : '';
+                    $durasiText .= $jam > 0 ? ($hari > 0 ? ' '.$jam.' Jam' : $jam.' Jam') : '';
+                @endphp
+                <div class="activity-item">
+                    <div class="activity-icon">
+                        <i class="fas {{ $icon }}"></i>
+                    </div>
+                    <div class="activity-content">
+                        <div class="activity-text">
+                            <strong>#{{ $akt->no_invoice }}</strong> — {{ $akt->nama_customer }} menyewa <strong>{{ $akt->nama_mobil }}</strong>
+                            @if($akt->nama_supir !== 'TANPA SUPIR')
+                                dengan supir {{ $akt->nama_supir }}
+                            @endif
+                        </div>
+                        <div class="activity-time">
+                            <i class="far fa-clock"></i> {{ $akt->tanggal_pinjam }} → {{ $akt->tanggal_kembali }} ({{ $durasiText }})
+                        </div>
+                    </div>
+                    <span class="activity-badge {{ $badgeClass }}">{{ $badgeText }}</span>
                 </div>
-            </div>
-            <span class="activity-badge badge-warning">Menunggu</span>
-        </div>
-
-        <div class="activity-item">
-            <div class="activity-icon">
-                <i class="fas fa-edit"></i>
-            </div>
-            <div class="activity-content">
-                <div class="activity-text">Status armada Honda Brio diperbarui menjadi "Tersedia"</div>
-                <div class="activity-time">
-                    <i class="far fa-clock"></i> 2 jam yang lalu
-                </div>
-            </div>
-            <span class="activity-badge badge-info">Update</span>
-        </div>
-
-        <div class="activity-item">
-            <div class="activity-icon">
-                <i class="fas fa-dollar-sign"></i>
-            </div>
-            <div class="activity-content">
-                <div class="activity-text">Pembayaran untuk sewa Toyota Fortuner telah dikonfirmasi</div>
-                <div class="activity-time">
-                    <i class="far fa-clock"></i> 3 jam yang lalu
-                </div>
-            </div>
-            <span class="activity-badge badge-success">Sukses</span>
-        </div>
+            @endforeach
+        @endif
     </div>
 
     <!-- STATUS BAR -->

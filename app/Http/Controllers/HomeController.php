@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Mobil;
+use App\Models\Sewa;
+use App\Models\Supir;
 use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
 {
@@ -22,12 +26,33 @@ class HomeController extends Controller
     }
 
     /**
-     * Show the application dashboard.
+     * Show the admin dashboard with real data.
      *
      * @return Renderable
      */
     public function adminHome()
     {
-        return view('admin.home');
+        // Stats
+        $totalMobil = Mobil::count();
+        $mobilTersedia = Mobil::where('status', 'TERSEDIA')->count();
+        $totalSupir = Supir::where('status', 'TERSEDIA')->count();
+        $totalTransaksi = Sewa::count();
+        $transaksiPending = Sewa::where('verifikasi', 'Requested')->count();
+        $transaksiDiterima = Sewa::where('verifikasi', 'DITERIMA')->count();
+        $totalPendapatan = Sewa::where('verifikasi', 'DITERIMA')->sum('total_biaya');
+
+        // Recent activities — 5 transaksi terbaru
+        $recentActivities = Sewa::orderBy('created_at', 'desc')->limit(5)->get();
+
+        return view('admin.home', [
+            'totalMobil' => $totalMobil,
+            'mobilTersedia' => $mobilTersedia,
+            'totalSupir' => $totalSupir,
+            'totalTransaksi' => $totalTransaksi,
+            'transaksiPending' => $transaksiPending,
+            'transaksiDiterima' => $transaksiDiterima,
+            'totalPendapatan' => $totalPendapatan,
+            'recentActivities' => $recentActivities,
+        ]);
     }
 }

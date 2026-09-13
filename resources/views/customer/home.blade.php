@@ -323,24 +323,24 @@
             
             <!-- Map -->
             <div class="relative group" data-aos="fade-left">
-                <div class="glass-effect-dark rounded-2xl p-2 overflow-hidden">
-                    <div class="rounded-xl overflow-hidden">
-                        <iframe 
-                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3957.603494981789!2d106.922277!3d-6.913957!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e684b8b0b0b0b0b%3A0x0!2zNsKwNTUnMDEuMiJTIDEwNsKwNTUnMjQuNCJF!5e0!3m2!1sen!2sid!4v1634567890123!5m2!1sen!2sid"
-                            width="100%" 
-                            height="450" 
-                            style="border:0;" 
-                            allowfullscreen="" 
-                            loading="lazy"
-                            class="w-full h-[450px] filter grayscale hover:grayscale-0 transition-all duration-500">
-                        </iframe>
-                    </div>
+                <div class="rounded-2xl border border-white/10 overflow-hidden" style="height: 450px;">
+                    <iframe 
+                        src="https://www.google.com/maps?q=3WPF+GVX,+Jl.+Griya+Selabumi+Endah,+Sriwidari,+Kec.+Gunungpuyuh,+Kota+Sukabumi,+Jawa+Barat+43121&z=17&ie=UTF8&iwloc=&output=embed"
+                        width="100%" 
+                        height="450" 
+                        style="border:0;" 
+                        allowfullscreen="" 
+                        loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade">
+                    </iframe>
                 </div>
                 
                 <!-- Map Overlay -->
-                <div class="absolute top-4 right-4 glass-effect rounded-lg px-4 py-2 text-sm">
-                    <i class="fas fa-location-dot text-yellow-500 mr-2"></i>
-                    Klik untuk rute
+                <div class="absolute top-4 right-4 glass-effect rounded-lg px-4 py-2 text-sm z-10">
+                    <a href="https://maps.google.com/?q=3WPF+GVX,+Jl.+Griya+Selabumi+Endah,+Sriwidari,+Kec.+Gunungpuyuh,+Kota+Sukabumi,+Jawa+Barat+43121" target="_blank" class="text-white no-underline hover:text-yellow-500 transition-colors">
+                        <i class="fas fa-location-dot text-yellow-500 mr-2"></i>
+                        Klik untuk rute
+                    </a>
                 </div>
             </div>
         </div>
@@ -414,5 +414,11 @@
         });
     });
 </script>
+<style>
+    .custom-marker {
+        background: none !important;
+        border: none !important;
+    }
+</style>
 @endpush
 @endsection

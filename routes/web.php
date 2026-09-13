@@ -17,7 +17,9 @@ use App\Http\Controllers\AdminSupirController;
 use App\Http\Controllers\HomeAwal;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\KeuanganController;
+use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\MobilController;
+use App\Http\Controllers\PengaturanController;
 use App\Http\Controllers\PengembalianController;
 use App\Http\Controllers\SewaController;
 use App\Http\Controllers\StorageFileController;
@@ -62,6 +64,10 @@ Route::middleware('auth:admin')->group(function () {
     Route::get('/pengembalian', [PengembalianController::class, 'index'])->name('pengembalian');
     Route::post('/pengembalian/{id}', [PengembalianController::class, 'pengembalian_selesai'])->name('pengembalian.selesai');
     Route::get('/keuangan', [KeuanganController::class, 'index'])->name('keuangan');
+    Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan');
+    Route::get('/pengaturan', [PengaturanController::class, 'index'])->name('pengaturan');
+    Route::post('/pengaturan/profile', [PengaturanController::class, 'updateProfile'])->name('pengaturan.profile');
+    Route::post('/pengaturan/password', [PengaturanController::class, 'updatePassword'])->name('pengaturan.password');
 });
 
 require __DIR__.'/auth.php';

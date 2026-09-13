@@ -38,8 +38,8 @@ class HomeController extends Controller
         $totalSupir = Supir::where('status', 'TERSEDIA')->count();
         $totalTransaksi = Sewa::count();
         $transaksiPending = Sewa::where('verifikasi', 'Requested')->count();
-        $transaksiDiterima = Sewa::where('verifikasi', 'DITERIMA')->count();
-        $totalPendapatan = Sewa::where('verifikasi', 'DITERIMA')->sum('total_biaya');
+        $transaksiDiterima = Sewa::whereIn('verifikasi', ['DITERIMA', 'SELESAI'])->count();
+        $totalPendapatan = Sewa::whereIn('verifikasi', ['DITERIMA', 'SELESAI'])->sum('total_biaya');
 
         // Recent activities — 5 transaksi terbaru
         $recentActivities = Sewa::orderBy('created_at', 'desc')->limit(5)->get();

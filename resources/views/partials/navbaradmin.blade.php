@@ -123,6 +123,14 @@
         <a href="{{ route('keuangan') }}" class="sb-item {{ request()->is('keuangan') ? 'active' : '' }}">
             <span class="sb-icon">💰</span> Keuangan
         </a>
+        <a href="{{ route('laporan') }}" class="sb-item {{ request()->is('laporan') ? 'active' : '' }}">
+            <span class="sb-icon">📊</span> Laporan
+        </a>
+
+        <div class="sb-section">Sistem</div>
+        <a href="{{ route('pengaturan') }}" class="sb-item {{ request()->is('pengaturan') ? 'active' : '' }}">
+            <span class="sb-icon">⚙️</span> Pengaturan
+        </a>
     </nav>
 
     <!-- LOGOUT -->

@@ -641,18 +641,18 @@
             </div>
         </a>
         
-        <a href="#" class="action-btn">
+        <a href="{{ route('transaksi') }}" class="action-btn">
             <div class="action-icon">
                 <i class="fas fa-clipboard-list"></i>
             </div>
             <div class="action-title">Transaksi</div>
             <div class="action-desc">
                 <i class="fas fa-clock" style="font-size: 0.7rem; margin-right: 0.25rem;"></i>
-                Lihat & verifikasi 12 pesanan baru
+                Lihat & verifikasi pesanan baru
             </div>
         </a>
         
-        <a href="#" class="action-btn">
+        <a href="{{ route('laporan') }}" class="action-btn">
             <div class="action-icon">
                 <i class="fas fa-chart-pie"></i>
             </div>
@@ -663,7 +663,7 @@
             </div>
         </a>
         
-        <a href="#" class="action-btn">
+        <a href="{{ route('pengaturan') }}" class="action-btn">
             <div class="action-icon">
                 <i class="fas fa-sliders-h"></i>
             </div>

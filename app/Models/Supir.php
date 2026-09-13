@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Model;
 
 class Supir extends Model
@@ -30,5 +31,10 @@ class Supir extends Model
     public function getRouteKeyName()
     {
         return 'noktp';
+    }
+
+    public function sewa(): HasMany
+    {
+        return $this->hasMany(Sewa::class, 'nama_supir', 'nama');
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Model;
 
 class Mobil extends Model
@@ -21,4 +22,9 @@ class Mobil extends Model
         'sewa',
         'foto',
     ];
+
+    public function sewa(): HasMany
+    {
+        return $this->hasMany(Sewa::class, 'nama_mobil', 'nama_mobil');
+    }
 }

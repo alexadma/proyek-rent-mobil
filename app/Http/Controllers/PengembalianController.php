@@ -3,22 +3,22 @@
 namespace App\Http\Controllers;
 
 use App\Models\Mobil;
+use App\Models\Sewa;
 use App\Models\Supir;
-use App\Models\Verifikasi;
 use Illuminate\Support\Facades\DB;
 
 class PengembalianController extends Controller
 {
     public function index()
     {
-        $status = Verifikasi::where('verifikasi', 'DITERIMA')->get();
+        $status = Sewa::where('verifikasi', 'DITERIMA')->get();
 
         return view('admin/pengembalian', compact('status'));
     }
 
     public function pengembalian_selesai($id)
     {
-        $transaksi = Verifikasi::find($id);
+        $transaksi = Sewa::find($id);
 
         if (! $transaksi) {
             return redirect()->back()->with('error', 'Transaksi tidak ditemukan.');
@@ -29,7 +29,7 @@ class PengembalianController extends Controller
         }
 
         DB::transaction(function () use ($id) {
-            $sewa = Verifikasi::where('id', $id)->lockForUpdate()->first();
+            $sewa = Sewa::where('id', $id)->lockForUpdate()->first();
 
             if ($sewa->verifikasi !== 'DITERIMA') {
                 return;

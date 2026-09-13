@@ -50,7 +50,7 @@ Route::middleware('auth')->group(function () {
 
     // Profile Customer
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
-    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::put('/profile', [ProfileController::class, 'update'])->middleware('throttle:10,1')->name('profile.update');
 });
 
 // Area admin (wajib login sebagai admin)
@@ -67,8 +67,8 @@ Route::middleware('auth:admin')->group(function () {
     Route::get('/keuangan', [KeuanganController::class, 'index'])->name('keuangan');
     Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan');
     Route::get('/pengaturan', [PengaturanController::class, 'index'])->name('pengaturan');
-    Route::post('/pengaturan/profile', [PengaturanController::class, 'updateProfile'])->name('pengaturan.profile');
-    Route::post('/pengaturan/password', [PengaturanController::class, 'updatePassword'])->name('pengaturan.password');
+    Route::post('/pengaturan/profile', [PengaturanController::class, 'updateProfile'])->middleware('throttle:10,1')->name('pengaturan.profile');
+    Route::post('/pengaturan/password', [PengaturanController::class, 'updatePassword'])->middleware('throttle:5,1')->name('pengaturan.password');
 });
 
 require __DIR__.'/auth.php';

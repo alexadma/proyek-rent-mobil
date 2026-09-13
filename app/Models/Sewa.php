@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Model;
 
 class Sewa extends Model
@@ -28,9 +29,19 @@ class Sewa extends Model
         'verifikasi',
     ];
 
-    public function getHargaMobil()
+    public function customer(): BelongsTo
     {
-        return $this->belongsTo(Mobil::class);
+        return $this->belongsTo(Customer::class);
+    }
+
+    public function mobil(): BelongsTo
+    {
+        return $this->belongsTo(Mobil::class, 'nama_mobil', 'nama_mobil');
+    }
+
+    public function supir(): BelongsTo
+    {
+        return $this->belongsTo(Supir::class, 'nama_supir', 'nama');
     }
 
     /**

@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Mobil;
 use App\Models\Sewa;
 use App\Models\Supir;
-use App\Models\Verifikasi;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
@@ -15,13 +14,13 @@ class VerifikasiController extends Controller
     {
         return view('admin/verifikasi', [
             'title' => 'Verifikasi',
-            'transaksi' => Verifikasi::where('verifikasi', 'Requested')->get(),
+            'transaksi' => Sewa::where('verifikasi', 'Requested')->get(),
         ]);
     }
 
     public function approve_transaksi($id)
     {
-        $transaksi = Verifikasi::find($id);
+        $transaksi = Sewa::find($id);
 
         if (! $transaksi) {
             return redirect()->back()->with('error', 'Transaksi tidak ditemukan.');
@@ -33,7 +32,7 @@ class VerifikasiController extends Controller
 
         try {
             DB::transaction(function () use ($id) {
-                $sewa = Verifikasi::where('id', $id)->lockForUpdate()->first();
+                $sewa = Sewa::where('id', $id)->lockForUpdate()->first();
 
                 if ($sewa->verifikasi !== 'Requested') {
                     throw ValidationException::withMessages(['transaksi' => 'Transaksi sudah diproses.']);
@@ -49,7 +48,7 @@ class VerifikasiController extends Controller
                     $sewa->nama_mobil,
                     $sewa->tanggal_pinjam,
                     $sewa->tanggal_kembali
-                ) && Verifikasi::where('id', '!=', $sewa->id)
+                ) && Sewa::where('id', '!=', $sewa->id)
                     ->where('nama_mobil', $sewa->nama_mobil)
                     ->where('verifikasi', 'DITERIMA')
                     ->exists();
@@ -79,7 +78,7 @@ class VerifikasiController extends Controller
 
     public function reject_transaksi($id)
     {
-        $status = Verifikasi::find($id);
+        $status = Sewa::find($id);
 
         if (! $status) {
             return redirect()->back()->with('error', 'Transaksi tidak ditemukan.');

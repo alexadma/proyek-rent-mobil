@@ -58,7 +58,7 @@
                                 <i class="fas fa-user mr-2 text-yellow-500"></i>
                                 Profile
                             </a>
-                            <a href="{{ route('invoice') }}" class="block px-4 py-2 hover:bg-white/10 transition-colors text-white">
+                            <a href="{{ url('/riwayat') }}" class="block px-4 py-2 hover:bg-white/10 transition-colors text-white">
                                 <i class="fas fa-history mr-2 text-yellow-500"></i>
                                 Transaksi
                             </a>
@@ -135,7 +135,7 @@
                 <a href="{{ route('profile') }}" class="text-white hover:text-yellow-500 transition-colors py-2 px-4 hover:bg-white/5 rounded-lg" onclick="closeMobileMenu()">
                     <i class="fas fa-user mr-3 text-yellow-500 w-5"></i>Profile
                 </a>
-                <a href="{{ route('invoice') }}" class="text-white hover:text-yellow-500 transition-colors py-2 px-4 hover:bg-white/5 rounded-lg" onclick="closeMobileMenu()">
+                <a href="{{ url('/riwayat') }}" class="text-white hover:text-yellow-500 transition-colors py-2 px-4 hover:bg-white/5 rounded-lg" onclick="closeMobileMenu()">
                     <i class="fas fa-history mr-3 text-yellow-500 w-5"></i>Transaksi
                 </a>
                 <form action="{{ route('logout') }}" method="POST" class="block">

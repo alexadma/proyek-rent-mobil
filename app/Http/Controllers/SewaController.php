@@ -239,6 +239,23 @@ class SewaController extends Controller
         ]);
     }
 
+    public function riwayat()
+    {
+        $user = Auth::guard('web')->user();
+
+        if (! $user) {
+            return redirect()->route('login');
+        }
+
+        $transaksis = Sewa::where('customer_id', $user->id)
+            ->orderByDesc('created_at')
+            ->get();
+
+        return view('customer/riwayat', [
+            'transaksis' => $transaksis,
+        ]);
+    }
+
     public function updateInvoice(Request $request)
     {
         $user = Auth::guard('web')->user();

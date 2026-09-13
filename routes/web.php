@@ -46,6 +46,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/sewa', [SewaController::class, 'store'])->name('sewa.store');
     Route::get('/invoice', [SewaController::class, 'invoice'])->name('invoice');
     Route::post('/invoice', [SewaController::class, 'updateInvoice']);
+    Route::get('/riwayat', [SewaController::class, 'riwayat'])->name('riwayat');
 
     // Profile Customer
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile');

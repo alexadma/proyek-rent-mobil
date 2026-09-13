@@ -386,7 +386,7 @@
 
             {{-- =================== QUICK LINKS =================== --}}
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-8" data-aos="fade-up" data-aos-delay="200">
-                <a href="{{ route('invoice') }}"
+                <a href="{{ url('/riwayat') }}"
                    class="group glass-effect-dark rounded-2xl p-5 border border-white/5 hover:border-yellow-500/20 transition-all duration-300 flex items-center gap-4">
                     <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-yellow-400/10 to-yellow-600/10 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
                         <i class="fas fa-file-invoice text-yellow-500"></i>

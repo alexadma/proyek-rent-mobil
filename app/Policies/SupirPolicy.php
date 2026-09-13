@@ -3,14 +3,14 @@
 namespace App\Policies;
 
 use App\Models\Supir;
-use App\Models\User;
+use App\Models\Admin;
 
 class SupirPolicy
 {
     /**
      * Determine whether the user can view any models.
      */
-    public function viewAny(User $user): bool
+    public function viewAny(Admin $user): bool
     {
         //
     }
@@ -18,7 +18,7 @@ class SupirPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Supir $supir): bool
+    public function view(Admin $user, Supir $supir): bool
     {
         //
     }
@@ -26,7 +26,7 @@ class SupirPolicy
     /**
      * Determine whether the user can create models.
      */
-    public function create(User $user): bool
+    public function create(Admin $user): bool
     {
         //
     }
@@ -34,7 +34,7 @@ class SupirPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Supir $supir): bool
+    public function update(Admin $user, Supir $supir): bool
     {
         //
     }
@@ -42,7 +42,7 @@ class SupirPolicy
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Supir $supir): bool
+    public function delete(Admin $user, Supir $supir): bool
     {
         //
     }
@@ -50,7 +50,7 @@ class SupirPolicy
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, Supir $supir): bool
+    public function restore(Admin $user, Supir $supir): bool
     {
         //
     }
@@ -58,7 +58,7 @@ class SupirPolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, Supir $supir): bool
+    public function forceDelete(Admin $user, Supir $supir): bool
     {
         //
     }

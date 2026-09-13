@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Mobil;
+use App\Models\Sewa;
 use App\Models\Supir;
 use App\Models\Verifikasi;
 use Illuminate\Support\Facades\DB;
@@ -43,17 +44,15 @@ class VerifikasiController extends Controller
                     throw ValidationException::withMessages(['transaksi' => 'Mobil sedang dalam maintenance.']);
                 }
 
-                $hasConflict = Verifikasi::where('id', '!=', $sewa->id)
+                $hasConflict = Sewa::hasOverlap(
+                    'mobil',
+                    $sewa->nama_mobil,
+                    $sewa->tanggal_pinjam,
+                    $sewa->tanggal_kembali
+                ) && Verifikasi::where('id', '!=', $sewa->id)
                     ->where('nama_mobil', $sewa->nama_mobil)
-                    ->whereIn('verifikasi', ['DITERIMA'])
-                    ->where(function ($q) use ($sewa) {
-                        $q->whereBetween('tanggal_pinjam', [$sewa->tanggal_pinjam, $sewa->tanggal_kembali])
-                            ->orWhereBetween('tanggal_kembali', [$sewa->tanggal_pinjam, $sewa->tanggal_kembali])
-                            ->orWhere(function ($q2) use ($sewa) {
-                                $q2->where('tanggal_pinjam', '<=', $sewa->tanggal_pinjam)
-                                    ->where('tanggal_kembali', '>=', $sewa->tanggal_kembali);
-                            });
-                    })->exists();
+                    ->where('verifikasi', 'DITERIMA')
+                    ->exists();
 
                 if ($hasConflict) {
                     throw ValidationException::withMessages(['transaksi' => 'Mobil sudah dirental pada rentang waktu tersebut oleh transaksi lain.']);

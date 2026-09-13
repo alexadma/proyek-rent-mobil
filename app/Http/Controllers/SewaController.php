@@ -2,21 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\UpdateSewaRequest;
 use App\Models\Customer;
 use App\Models\Mobil;
 use App\Models\Sewa;
 use App\Models\Supir;
-use Carbon\Carbon;
+use App\Services\SewaService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
 class SewaController extends Controller
 {
+    public function __construct(
+        private SewaService $sewaService
+    ) {}
+
     /**
-     * Display a listing of the resource.
+     * Form sewa mobil (customer).
      */
     public function index()
     {
@@ -35,15 +37,7 @@ class SewaController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
+     * Proses penyewaan mobil.
      */
     public function store(Request $request)
     {
@@ -56,7 +50,7 @@ class SewaController extends Controller
         $request->validate([
             'mobil' => ['required'],
             'supir' => ['required'],
-            'pickup_datetime' => ['required', 'date', 'after_or_equal:'.Carbon::today()->toDateString()],
+            'pickup_datetime' => ['required', 'date', 'after_or_equal:'.now()->toDateString()],
             'return_datetime' => ['required', 'date', 'after:pickup_datetime'],
             'jaminan' => ['required', 'string'],
         ], [
@@ -70,69 +64,18 @@ class SewaController extends Controller
         ]);
 
         $customer = Customer::where('username', $user->username)->first();
-        $nama = $customer->nama ?? $user->username;
-        $nohp = $request->input('nohp') ?: ($customer->nohp ?? '');
-        $alamat = $request->input('alamat') ?: ($customer->alamat ?? '');
-        $jaminan = $request->input('jaminan') ?: 'KTP';
-        $mobilName = $request->input('mobil');
-        $supirName = $request->input('supir');
-        $isTanpaSupir = ($supirName === 'TANPA SUPIR');
-
-        $waktu_pjm = Carbon::parse($request->input('pickup_datetime'))->format('Y-m-d H:i:s');
-        $waktu_balik = Carbon::parse($request->input('return_datetime'))->format('Y-m-d H:i:s');
-
-        $durasiJam = (int) Carbon::parse($waktu_pjm)->diffInHours(Carbon::parse($waktu_balik));
-        if ($durasiJam < 1) {
-            $durasiJam = 1;
-        }
 
         try {
-            $sewa = DB::transaction(function () use ($mobilName, $supirName, $isTanpaSupir, $durasiJam, $waktu_pjm, $waktu_balik, $nama, $nohp, $alamat, $jaminan, $customer) {
-                $mobil = Mobil::where('nama_mobil', $mobilName)->lockForUpdate()->first();
-                if (! $mobil || $mobil->status !== 'TERSEDIA') {
-                    throw ValidationException::withMessages(['mobil' => 'Mobil tidak tersedia untuk disewa.']);
-                }
-
-                $supirNama = $supirName;
-                if (! $isTanpaSupir) {
-                    $supir = Supir::where('nama', $supirName)->lockForUpdate()->first();
-                    if (! $supir || $supir->status !== 'TERSEDIA') {
-                        throw ValidationException::withMessages(['supir' => 'Supir tidak tersedia untuk disewa.']);
-                    }
-                }
-
-                if ($this->overlapExists('mobil', $mobilName, $waktu_pjm, $waktu_balik)) {
-                    throw ValidationException::withMessages(['mobil' => 'Kendaraan sudah dipesan pada rentang waktu tersebut.']);
-                }
-                if (! $isTanpaSupir && $this->overlapExists('supir', $supirName, $waktu_pjm, $waktu_balik)) {
-                    throw ValidationException::withMessages(['supir' => 'Supir sudah dipesan pada rentang waktu tersebut.']);
-                }
-
-                $hari = max(1, (int) ceil($durasiJam / 24));
-                $supirBiaya = $isTanpaSupir ? 0 : (int) $supir->sewa;
-                $totalBiaya = ((int) $mobil->sewa + $supirBiaya) * $hari;
-
-                $lastRecord = Sewa::orderBy('id', 'desc')->lockForUpdate()->first();
-                $newId = $lastRecord ? $lastRecord->id + 1 : 1;
-                $no_invoice = 'RNT'.str_pad($newId, 5, '0', STR_PAD_LEFT);
-
-                return Sewa::create([
-                    'no_invoice' => $no_invoice,
-                    'customer_id' => $customer->id ?? null,
-                    'nama_customer' => $nama,
-                    'nohp' => $nohp,
-                    'alamat' => $alamat,
-                    'nama_mobil' => $mobil->nama_mobil,
-                    'nopol' => $mobil->nopol,
-                    'nama_supir' => $supirNama,
-                    'tanggal_pinjam' => $waktu_pjm,
-                    'tanggal_kembali' => $waktu_balik,
-                    'jaminan' => $jaminan,
-                    'total_biaya' => $totalBiaya,
-                    'verifikasi' => 'Requested',
-                    'bukti' => null,
-                ]);
-            });
+            $this->sewaService->createSewa([
+                'mobil' => $request->input('mobil'),
+                'supir' => $request->input('supir'),
+                'pickup_datetime' => $request->input('pickup_datetime'),
+                'return_datetime' => $request->input('return_datetime'),
+                'jaminan' => $request->input('jaminan'),
+                'nama' => $customer->nama ?? $user->username,
+                'nohp' => $request->input('nohp') ?: ($customer->nohp ?? ''),
+                'alamat' => $request->input('alamat') ?: ($customer->alamat ?? ''),
+            ], $customer->id ?? null);
         } catch (ValidationException $e) {
             return redirect()->back()->withErrors($e->errors())->withInput();
         }
@@ -140,84 +83,24 @@ class SewaController extends Controller
         return redirect('/invoice');
     }
 
-    private function overlapExists(string $type, string $name, string $waktuPjm, string $waktuBalik): bool
-    {
-        $query = Sewa::query()
-            ->whereIn('verifikasi', ['Requested', 'DITERIMA'])
-            ->where($type === 'mobil' ? 'nama_mobil' : 'nama_supir', $name);
-
-        $query->where(function ($q) use ($waktuPjm, $waktuBalik) {
-            $q->whereBetween('tanggal_pinjam', [$waktuPjm, $waktuBalik])
-                ->orWhereBetween('tanggal_kembali', [$waktuPjm, $waktuBalik])
-                ->orWhere(function ($q2) use ($waktuPjm, $waktuBalik) {
-                    $q2->where('tanggal_pinjam', '<=', $waktuPjm)
-                        ->where('tanggal_kembali', '>=', $waktuBalik);
-                });
-        });
-
-        return $query->exists();
-    }
-
+    /**
+     * AJAX: hitung harga sewa.
+     */
     public function calculatePrice(Request $request)
     {
-        $mobil = $request->input('mobil') ? Mobil::where('nama_mobil', $request->input('mobil'))->first() : null;
-        $supirName = $request->input('supir');
-        $isTanpaSupir = ($supirName === 'TANPA SUPIR');
-        $supir = (! $isTanpaSupir && $supirName) ? Supir::where('nama', $supirName)->first() : null;
-
-        $pickup = $request->input('pickup_datetime');
-        $return = $request->input('return_datetime');
-
-        $durasiJam = 24;
-        if ($pickup && $return) {
-            $durasiJam = max(1, (int) Carbon::parse($pickup)->diffInHours(Carbon::parse($return)));
-        }
-
-        $hari = max(1, (int) ceil($durasiJam / 24));
-        $supirBiaya = $isTanpaSupir ? 0 : (int) ($supir->sewa ?? 0);
-        $total = ((int) ($mobil->sewa ?? 0) + $supirBiaya) * $hari;
-
-        $hariDisplay = $durasiJam >= 24 ? floor($durasiJam / 24) : 0;
-        $jamSisa = $durasiJam % 24;
-        $durasiText = '';
-        if ($hariDisplay > 0) {
-            $durasiText .= $hariDisplay.' Hari';
-        }
-        if ($jamSisa > 0) {
-            $durasiText .= ($hariDisplay > 0 ? ' ' : '').$jamSisa.' Jam';
-        }
-        if ($durasiText === '') {
-            $durasiText = '1 Hari';
-        }
-
-        return response()->json([
-            'total' => $total,
-            'nopol' => $mobil->nopol ?? null,
-            'hari' => $hari,
-            'durasi_jam' => $durasiJam,
-            'durasi_text' => $durasiText,
-            'harga_mobil' => (int) ($mobil->sewa ?? 0),
-            'harga_supir' => $supirBiaya,
-            'is_tanpa_supir' => $isTanpaSupir,
-        ]);
+        return response()->json(
+            $this->sewaService->calculatePrice(
+                $request->input('mobil'),
+                $request->input('supir'),
+                $request->input('pickup_datetime'),
+                $request->input('return_datetime')
+            )
+        );
     }
 
     /**
-     * Display the specified resource.
+     * Invoice terakhir customer.
      */
-    public function show(Sewa $sewa)
-    {
-        return view('admin/verifikasi', [
-            'title' => 'Daftar Transaksi',
-            'transaksi' => Sewa::all(),
-        ]);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Sewa $sewa) {}
-
     public function invoice()
     {
         $user = Auth::guard('web')->user();
@@ -229,33 +112,16 @@ class SewaController extends Controller
             return redirect()->route('home');
         }
 
-        $mobil = Mobil::where('nama_mobil', $sewa->nama_mobil)->first();
-        $supir = Supir::where('nama', $sewa->nama_supir)->first();
-
         return view('customer/invoice', [
             'sewa' => $sewa,
-            'mobil' => $mobil,
-            'supir' => $supir,
+            'mobil' => Mobil::where('nama_mobil', $sewa->nama_mobil)->first(),
+            'supir' => Supir::where('nama', $sewa->nama_supir)->first(),
         ]);
     }
 
-    public function riwayat()
-    {
-        $user = Auth::guard('web')->user();
-
-        if (! $user) {
-            return redirect()->route('login');
-        }
-
-        $transaksis = Sewa::where('customer_id', $user->id)
-            ->orderByDesc('created_at')
-            ->get();
-
-        return view('customer/riwayat', [
-            'transaksis' => $transaksis,
-        ]);
-    }
-
+    /**
+     * Upload bukti transfer.
+     */
     public function updateInvoice(Request $request)
     {
         $user = Auth::guard('web')->user();
@@ -282,27 +148,23 @@ class SewaController extends Controller
         return redirect('home')->with('success', 'Bukti transfer telah diunggah! Halaman akan kembali ke home...');
     }
 
-    public function laporan(Sewa $sewa)
+    /**
+     * Riwayat transaksi customer.
+     */
+    public function riwayat()
     {
-        return view('admin/keuangan', [
-            'title' => 'Daftar Transaksi',
-            'transaksi' => Sewa::all(),
+        $user = Auth::guard('web')->user();
+
+        if (! $user) {
+            return redirect()->route('login');
+        }
+
+        $transaksis = Sewa::where('customer_id', $user->id)
+            ->orderByDesc('created_at')
+            ->get();
+
+        return view('customer/riwayat', [
+            'transaksis' => $transaksis,
         ]);
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateSewaRequest $request, Sewa $sewa)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Sewa $sewa)
-    {
-        //
     }
 }

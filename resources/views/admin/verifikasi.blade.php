@@ -62,7 +62,28 @@
     .table-card-title { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; color: #fff; }
     .table-card-note { color: #666; font-size: .75rem; }
 
-    /* DATATABLES */
+    /* DATATABLES — hide sort arrows, force theme */
+    table.dataTable thead th,
+    table.dataTable thead td,
+    #verifikasiTable thead th { 
+        position: relative !important;
+        padding-right: 1rem !important;
+    }
+    table.dataTable thead .sorting:after,
+    table.dataTable thead .sorting_asc:after,
+    table.dataTable thead .sorting_desc:after,
+    table.dataTable thead .sorting_asc_disable:after,
+    table.dataTable thead .sorting_desc_disable:after,
+    table.dataTable thead th.sorting::after,
+    table.dataTable thead th.sorting_asc::after,
+    table.dataTable thead th.sorting_desc::after { 
+        display: none !important; 
+    }
+    table.dataTable thead .sorting,
+    table.dataTable thead .sorting_asc,
+    table.dataTable thead .sorting_desc { 
+        background-image: none !important; 
+    }
     .dataTables_wrapper .dataTables_length,
     .dataTables_wrapper .dataTables_filter { padding: 1rem 1.4rem 0; color: #888 !important; }
     .dataTables_wrapper .dataTables_info,
@@ -255,6 +276,9 @@ $(document).ready(function() {
     $('#verifikasiTable').DataTable({
         "lengthMenu": [10, 25, 50, 100],
         "pageLength": 10,
+        "ordering": false,
+        "info": true,
+        "searching": true,
         "language": {
             "lengthMenu": "Tampilkan _MENU_",
             "zeroRecords": "Tidak ada data menunggu verifikasi",

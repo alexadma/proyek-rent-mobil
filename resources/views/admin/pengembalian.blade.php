@@ -57,7 +57,17 @@
     }
     .table-card-note { color: #666; font-size: .75rem; }
 
-    /* DATATABLES OVERRIDES */
+    /* DATATABLES OVERRIDES — hide sort arrows */
+    table.dataTable thead th { position: relative !important; }
+    table.dataTable thead .sorting:after,
+    table.dataTable thead .sorting_asc:after,
+    table.dataTable thead .sorting_desc:after,
+    table.dataTable thead th.sorting::after,
+    table.dataTable thead th.sorting_asc::after,
+    table.dataTable thead th.sorting_desc::after { display: none !important; }
+    table.dataTable thead .sorting,
+    table.dataTable thead .sorting_asc,
+    table.dataTable thead .sorting_desc { background-image: none !important; }
     .dataTables_wrapper .dataTables_length,
     .dataTables_wrapper .dataTables_filter { padding: 1rem 1.4rem 0; color: #888 !important; }
     .dataTables_wrapper .dataTables_info,
@@ -239,6 +249,7 @@ $(document).ready(function() {
     $('#pengembalianTable').DataTable({
         "lengthMenu": [10, 25, 50, 100],
         "pageLength": 10,
+        "ordering": false,
         "language": {
             "lengthMenu": "Tampilkan _MENU_",
             "zeroRecords": "Tidak ada data",

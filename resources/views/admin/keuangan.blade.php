@@ -75,7 +75,17 @@
         font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; color: #fff;
     }
 
-    /* DATATABLES OVERRIDES */
+    /* DATATABLES OVERRIDES — hide sort arrows */
+    table.dataTable thead th { position: relative !important; }
+    table.dataTable thead .sorting:after,
+    table.dataTable thead .sorting_asc:after,
+    table.dataTable thead .sorting_desc:after,
+    table.dataTable thead th.sorting::after,
+    table.dataTable thead th.sorting_asc::after,
+    table.dataTable thead th.sorting_desc::after { display: none !important; }
+    table.dataTable thead .sorting,
+    table.dataTable thead .sorting_asc,
+    table.dataTable thead .sorting_desc { background-image: none !important; }
     .dataTables_wrapper .dataTables_length select,
     .dataTables_wrapper .dataTables_filter input {
         background: var(--dark-3) !important; color: #fff !important;
@@ -221,6 +231,7 @@ $(document).ready(function() {
     $('#rentalTable').DataTable({
         "lengthMenu": [10, 25, 50, 100],
         "pageLength": 10,
+        "ordering": false,
         "language": {
             "lengthMenu": "Tampilkan _MENU_ data",
             "zeroRecords": "Tidak ada data",

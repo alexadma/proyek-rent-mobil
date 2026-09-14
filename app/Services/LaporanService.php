@@ -62,8 +62,8 @@ class LaporanService
     {
         return Sewa::whereIn('verifikasi', ['DITERIMA', 'SELESAI'])
             ->select(
-                DB::raw("DATE_FORMAT(created_at, '%Y-%m') as bulan"),
-                DB::raw('SUM(total_biaya) as total'),
+                DB::raw("TO_CHAR(created_at, 'YYYY-MM') as bulan"),
+                DB::raw('SUM(total_biaya)::numeric as total'),
                 DB::raw('COUNT(*) as jumlah')
             )
             ->groupBy('bulan')

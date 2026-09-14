@@ -1,5 +1,5 @@
 {
-  "buildCommand": "npm install && npm run build",
+  "buildCommand": "composer install --no-dev && npm install && npm run build",
   "installCommand": "",
   "outputDirectory": "public",
   "framework": null,

@@ -1,23 +1,19 @@
 <?php
 
-/**
- * Laravel - A PHP Framework For Web Artisans
- *
- * @package  Laravel
- * @author   Taylor Otwell <taylor@laravel.com>
- */
-
 use Illuminate\Http\Request;
 
 define('LARAVEL_START', microtime(true));
 
-// Register the Composer autoloader...
 require __DIR__ . '/../vendor/autoload.php';
 
 // ------------------------------------------------------------------
-// Vercel /tmp writable storage — set up on every cold start
+// Serverless writable storage — deteksi berdasarkan writability,
+// bukan nama platform (lebih reliable di berbagai runtime)
 // ------------------------------------------------------------------
-if (($_ENV['VERCEL'] ?? false) || ($_ENV['NOW_REGION'] ?? false)) {
+$defaultStorage = __DIR__ . '/../storage';
+$needsTmpStorage = !is_writable($defaultStorage);
+
+if ($needsTmpStorage) {
     $dirs = [
         '/tmp/storage/framework/views',
         '/tmp/storage/framework/cache/data',
@@ -26,7 +22,7 @@ if (($_ENV['VERCEL'] ?? false) || ($_ENV['NOW_REGION'] ?? false)) {
         '/tmp/storage/app/public',
     ];
     foreach ($dirs as $dir) {
-        if (! is_dir($dir)) {
+        if (!is_dir($dir)) {
             mkdir($dir, 0775, true);
         }
     }
@@ -35,8 +31,7 @@ if (($_ENV['VERCEL'] ?? false) || ($_ENV['NOW_REGION'] ?? false)) {
 // Bootstrap Laravel...
 $app = require_once __DIR__ . '/../bootstrap/app.php';
 
-// Redirect storage path to /tmp so writes succeed on Vercel
-if (($_ENV['VERCEL'] ?? false) || ($_ENV['NOW_REGION'] ?? false)) {
+if ($needsTmpStorage) {
     $app->useStoragePath('/tmp/storage');
 }
 

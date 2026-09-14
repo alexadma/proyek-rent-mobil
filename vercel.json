@@ -3,9 +3,6 @@
   "installCommand": "",
   "outputDirectory": "public",
   "framework": null,
-  "php": {
-    "composer": true
-  },
   "functions": {
     "api/index.php": {
       "runtime": "vercel-php@8.2",

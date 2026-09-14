@@ -12,7 +12,8 @@ return new class extends Migration
             $table->id();
             $table->string('username')->unique();
             $table->string('password');
-            $table->enum('role', ['super admin', 'admin', 'user'])->default('user');
+            // Use string + comment instead of enum for PostgreSQL compatibility
+            $table->string('role')->default('user')->comment('Allowed: super admin, admin, user');
             $table->rememberToken();
             $table->timestamps();
         });

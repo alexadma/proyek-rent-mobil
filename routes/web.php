@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\AdminMobilController;
 use App\Http\Controllers\ProfileController;
 /*
@@ -56,6 +57,7 @@ Route::middleware('auth')->group(function () {
 // Area admin (wajib login sebagai admin)
 Route::middleware('auth:admin')->group(function () {
     Route::get('/homeadmin', [HomeController::class, 'adminHome'])->name('home.admin');
+    Route::get('/activity-log', [ActivityLogController::class, 'index'])->name('activity-log');
     Route::resource('/mobil', AdminMobilController::class);
     Route::resource('/supir', AdminSupirController::class);
 

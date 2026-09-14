@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ActivityLog;
 use App\Models\Mobil;
 use App\Models\Sewa;
 use App\Models\Supir;
@@ -73,6 +74,8 @@ class VerifikasiController extends Controller
             return redirect()->back()->withErrors($e->errors())->withInput();
         }
 
+        ActivityLog::log('transaksi', 'approve', 'Menyetujui transaksi #' . $sewa->no_invoice . ' - ' . $sewa->nama_customer);
+
         return redirect()->back()->with('success', 'Transaksi Diterima');
     }
 
@@ -90,6 +93,8 @@ class VerifikasiController extends Controller
 
         $status->verifikasi = 'DITOLAK';
         $status->save();
+
+        ActivityLog::log('transaksi', 'reject', 'Menolak transaksi #' . $status->no_invoice . ' - ' . $status->nama_customer);
 
         return redirect()->back()->with('success', 'Transaksi Ditolak');
     }

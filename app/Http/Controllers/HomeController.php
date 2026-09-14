@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ActivityLog;
 use App\Models\Mobil;
 use App\Models\Sewa;
 use App\Models\Supir;
@@ -41,8 +42,8 @@ class HomeController extends Controller
         $transaksiDiterima = Sewa::whereIn('verifikasi', ['DITERIMA', 'SELESAI'])->count();
         $totalPendapatan = Sewa::whereIn('verifikasi', ['DITERIMA', 'SELESAI'])->sum('total_biaya');
 
-        // Recent activities — 5 transaksi terbaru
-        $recentActivities = Sewa::orderBy('created_at', 'desc')->limit(5)->get();
+        // Recent activities — 8 aktivitas terbaru (gabungan transaksi + CRUD)
+        $recentActivities = ActivityLog::orderBy('created_at', 'desc')->limit(8)->get();
 
         return view('admin.home', [
             'totalMobil' => $totalMobil,

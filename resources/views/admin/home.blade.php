@@ -682,7 +682,7 @@
                 <i class="fas fa-history"></i>
                 Aktivitas Terbaru
             </div>
-            <a href="#" class="view-all">
+            <a href="{{ route('activity-log') }}" class="view-all">
                 Lihat Semua <i class="fas fa-arrow-right"></i>
             </a>
         </div>
@@ -702,49 +702,62 @@
         @else
             @foreach($recentActivities as $akt)
                 @php
-                    $verif = $akt->verifikasi;
-                    if ($verif === 'Requested') {
-                        $badgeClass = 'badge-warning';
-                        $badgeText = 'Menunggu';
-                        $icon = 'fa-clock';
-                    } elseif ($verif === 'DITERIMA') {
+                    // Tentukan icon & warna berdasarkan type & action
+                    $type = $akt->type;
+                    $action = $akt->action;
+
+                    if ($type === 'mobil' && $action === 'create') {
+                        $icon = 'fa-car';
                         $badgeClass = 'badge-success';
-                        $badgeText = 'Diterima';
-                        $icon = 'fa-check-circle';
-                    } elseif ($verif === 'SELESAI') {
+                        $badgeText = 'Mobil Baru';
+                    } elseif ($type === 'mobil' && $action === 'update') {
+                        $icon = 'fa-car';
                         $badgeClass = 'badge-info';
-                        $badgeText = 'Selesai';
-                        $icon = 'fa-flag-checkered';
-                    } elseif ($verif === 'DITOLAK') {
+                        $badgeText = 'Update Mobil';
+                    } elseif ($type === 'mobil' && $action === 'delete') {
+                        $icon = 'fa-car';
+                        $badgeClass = 'badge-danger';
+                        $badgeText = 'Hapus Mobil';
+                    } elseif ($type === 'supir' && $action === 'create') {
+                        $icon = 'fa-user-plus';
+                        $badgeClass = 'badge-success';
+                        $badgeText = 'Supir Baru';
+                    } elseif ($type === 'supir' && $action === 'update') {
+                        $icon = 'fa-user-edit';
+                        $badgeClass = 'badge-info';
+                        $badgeText = 'Update Supir';
+                    } elseif ($type === 'supir' && $action === 'delete') {
+                        $icon = 'fa-user-minus';
+                        $badgeClass = 'badge-danger';
+                        $badgeText = 'Hapus Supir';
+                    } elseif ($type === 'transaksi' && $action === 'create') {
+                        $icon = 'fa-file-invoice';
+                        $badgeClass = 'badge-warning';
+                        $badgeText = 'Transaksi';
+                    } elseif ($type === 'transaksi' && $action === 'approve') {
+                        $icon = 'fa-check-circle';
+                        $badgeClass = 'badge-success';
+                        $badgeText = 'Disetujui';
+                    } elseif ($type === 'transaksi' && $action === 'reject') {
+                        $icon = 'fa-times-circle';
                         $badgeClass = 'badge-danger';
                         $badgeText = 'Ditolak';
-                        $icon = 'fa-times-circle';
                     } else {
-                        $badgeClass = 'badge-secondary';
-                        $badgeText = $verif;
                         $icon = 'fa-info-circle';
+                        $badgeClass = 'badge-secondary';
+                        $badgeText = ucfirst($action);
                     }
 
                     $timeDiff = $akt->created_at->diffForHumans();
-                    $durasiJam = \Carbon\Carbon::parse($akt->tanggal_pinjam)->diffInHours(\Carbon\Carbon::parse($akt->tanggal_kembali));
-                    $hari = floor($durasiJam / 24);
-                    $jam = $durasiJam % 24;
-                    $durasiText = $hari > 0 ? $hari.' Hari' : '';
-                    $durasiText .= $jam > 0 ? ($hari > 0 ? ' '.$jam.' Jam' : $jam.' Jam') : '';
                 @endphp
                 <div class="activity-item">
                     <div class="activity-icon">
                         <i class="fas {{ $icon }}"></i>
                     </div>
                     <div class="activity-content">
-                        <div class="activity-text">
-                            <strong>#{{ $akt->no_invoice }}</strong> — {{ $akt->nama_customer }} menyewa <strong>{{ $akt->nama_mobil }}</strong>
-                            @if($akt->nama_supir !== 'TANPA SUPIR')
-                                dengan supir {{ $akt->nama_supir }}
-                            @endif
-                        </div>
+                        <div class="activity-text">{{ $akt->description }}</div>
                         <div class="activity-time">
-                            <i class="far fa-clock"></i> {{ $akt->tanggal_pinjam }} → {{ $akt->tanggal_kembali }} ({{ $durasiText }})
+                            <i class="far fa-clock"></i> {{ $timeDiff }} · {{ $akt->user ?? 'Admin' }}
                         </div>
                     </div>
                     <span class="activity-badge {{ $badgeClass }}">{{ $badgeText }}</span>

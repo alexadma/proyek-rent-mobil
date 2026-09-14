@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ActivityLog;
 use App\Models\Mobil;
 use App\Models\Sewa;
 use App\Models\Supir;
@@ -41,6 +42,8 @@ class PengembalianController extends Controller
 
             $sewa->verifikasi = 'SELESAI';
             $sewa->save();
+
+            ActivityLog::log('transaksi', 'return', 'Pengembalian selesai: #' . $sewa->no_invoice . ' - ' . $sewa->nama_customer);
         });
 
         return redirect()->back()->with('success', 'Transaksi Selesai');

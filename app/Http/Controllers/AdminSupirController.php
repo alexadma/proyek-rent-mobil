@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ActivityLog;
 use App\Models\Supir;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -44,6 +45,8 @@ class AdminSupirController extends Controller
         }
 
         Supir::create($validateData);
+
+        ActivityLog::log('supir', 'create', 'Menambahkan supir baru: ' . $validateData['nama']);
 
         return redirect('supir')->with('success', 'Supir Baru telah ditambahkan');
     }
@@ -91,6 +94,8 @@ class AdminSupirController extends Controller
         Supir::where('noktp', $supir->noktp)
             ->update($validateData);
 
+        ActivityLog::log('supir', 'update', 'Mengupdate data supir: ' . $supir->nama);
+
         return redirect('supir')->with('success', 'Data Supir  telah diupdate');
     }
 
@@ -99,10 +104,14 @@ class AdminSupirController extends Controller
      */
     public function destroy(Supir $supir)
     {
+        $nama = $supir->nama;
+
         if ($supir->image) {
             Storage::delete($supir->image);
         }
         Supir::destroy($supir->noktp);
+
+        ActivityLog::log('supir', 'delete', 'Menghapus supir: ' . $nama);
 
         return redirect('supir')->with('success', 'Data Supir telah dihapus');
     }

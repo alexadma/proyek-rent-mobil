@@ -16,5 +16,6 @@ class DatabaseSeeder extends Seeder
         $this->call(MobilSeeder::class);
         $this->call(SupirSeeder::class);
         $this->call(TransaksiSeeder::class);
+        $this->call(ActivityLogSeeder::class);
     }
 }

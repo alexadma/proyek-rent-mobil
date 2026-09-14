@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ActivityLog;
 use App\Models\Mobil;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -48,6 +49,8 @@ class AdminMobilController extends Controller
         $validateData['status'] = 'TERSEDIA';
 
         Mobil::create($validateData);
+
+        ActivityLog::log('mobil', 'create', 'Menambahkan mobil baru: ' . $validateData['nama_mobil'] . ' (' . $validateData['nopol'] . ')');
 
         return redirect('mobil')->with('success', 'Mobil Baru telah ditambahkan');
     }
@@ -103,15 +106,22 @@ class AdminMobilController extends Controller
         Mobil::where('id', $mobil->id)
             ->update($validateData);
 
+        ActivityLog::log('mobil', 'update', 'Mengupdate data mobil: ' . $validateData['nama_mobil'] . ' (' . $validateData['nopol'] . ')');
+
         return redirect('mobil')->with('success', 'Data Mobil telah Di Update');
     }
 
     public function destroy(Mobil $mobil)
     {
+        $nama = $mobil->nama_mobil;
+        $nopol = $mobil->nopol;
+
         if ($mobil->foto) {
             Storage::delete($mobil->foto);
         }
         Mobil::destroy($mobil->id);
+
+        ActivityLog::log('mobil', 'delete', 'Menghapus mobil: ' . $nama . ' (' . $nopol . ')');
 
         return redirect('mobil')->with('success', 'Data Mobil telah dihapus');
     }

@@ -7,13 +7,12 @@ define('LARAVEL_START', microtime(true));
 require __DIR__ . '/../vendor/autoload.php';
 
 // ------------------------------------------------------------------
-// Serverless writable storage — deteksi berdasarkan writability,
-// bukan nama platform (lebih reliable di berbagai runtime)
+// Serverless writable storage — deteksi via getenv(), lebih reliable
+// daripada $_ENV atau is_writable() di environment Vercel
 // ------------------------------------------------------------------
-$defaultStorage = __DIR__ . '/../storage';
-$needsTmpStorage = !is_writable($defaultStorage);
+$isProduction = getenv('APP_ENV') === 'production';
 
-if ($needsTmpStorage) {
+if ($isProduction) {
     $dirs = [
         '/tmp/storage/framework/views',
         '/tmp/storage/framework/cache/data',
@@ -31,7 +30,7 @@ if ($needsTmpStorage) {
 // Bootstrap Laravel...
 $app = require_once __DIR__ . '/../bootstrap/app.php';
 
-if ($needsTmpStorage) {
+if ($isProduction) {
     $app->useStoragePath('/tmp/storage');
 }
 

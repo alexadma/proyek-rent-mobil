@@ -8,6 +8,9 @@ use Illuminate\Support\Facades\Hash;
 
 class CustomerProfileService
 {
+    public function __construct(
+        private SupabaseStorageService $storage
+    ) {}
     /**
      * Update customer profile including photo and password.
      */
@@ -39,19 +42,11 @@ class CustomerProfileService
 
     private function handlePhotoUpload(Customer $customer, $file): string
     {
-        $fotoDir = public_path('foto-profile');
-        if (! is_dir($fotoDir)) {
-            mkdir($fotoDir, 0755, true);
+        // Delete old photo from Supabase Storage
+        if ($customer->foto) {
+            $this->storage->delete($customer->foto);
         }
 
-        // Delete old photo
-        if ($customer->foto && file_exists(public_path($customer->foto))) {
-            unlink(public_path($customer->foto));
-        }
-
-        $filename = time().'_'.$file->getClientOriginalName();
-        $file->move($fotoDir, $filename);
-
-        return 'foto-profile/'.$filename;
+        return $this->storage->upload($file, 'foto-profile');
     }
 }

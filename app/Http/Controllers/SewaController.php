@@ -7,6 +7,7 @@ use App\Models\Mobil;
 use App\Models\Sewa;
 use App\Models\Supir;
 use App\Services\SewaService;
+use App\Services\SupabaseStorageService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
@@ -14,7 +15,8 @@ use Illuminate\Validation\ValidationException;
 class SewaController extends Controller
 {
     public function __construct(
-        private SewaService $sewaService
+        private SewaService $sewaService,
+        private SupabaseStorageService $storage
     ) {}
 
     /**
@@ -140,7 +142,7 @@ class SewaController extends Controller
         ]);
 
         if ($request->file('bukti')) {
-            $validateData['bukti'] = $request->file('bukti')->store('bukti-tf', 'public');
+            $validateData['bukti'] = $this->storage->upload($request->file('bukti'), 'bukti-tf');
         }
 
         Sewa::where('id', $sewa->id)->update($validateData);

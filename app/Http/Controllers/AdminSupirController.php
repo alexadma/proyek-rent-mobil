@@ -4,11 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\ActivityLog;
 use App\Models\Supir;
+use App\Services\SupabaseStorageService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class AdminSupirController extends Controller
 {
+    public function __construct(
+        private SupabaseStorageService $storage
+    ) {}
     /**
      * Display a listing of the resource.
      */
@@ -41,7 +44,7 @@ class AdminSupirController extends Controller
         ]);
 
         if ($request->file('image')) {
-            $validateData['image'] = $request->file('image')->store('foto-supir', 'public');
+            $validateData['image'] = $this->storage->upload($request->file('image'), 'foto-supir');
         }
 
         Supir::create($validateData);
@@ -85,10 +88,10 @@ class AdminSupirController extends Controller
         $validateData = $request->validate($rules);
 
         if ($request->file('image')) {
-            if ($request->oldimage && str_starts_with($request->oldimage, 'foto-supir/')) {
-                Storage::delete('foto-supir/'.basename($request->oldimage));
+            if ($request->oldimage) {
+                $this->storage->delete($request->oldimage);
             }
-            $validateData['image'] = $request->file('image')->store('foto-supir', 'public');
+            $validateData['image'] = $this->storage->upload($request->file('image'), 'foto-supir');
         }
 
         Supir::where('noktp', $supir->noktp)
@@ -107,7 +110,7 @@ class AdminSupirController extends Controller
         $nama = $supir->nama;
 
         if ($supir->image) {
-            Storage::delete($supir->image);
+            $this->storage->delete($supir->image);
         }
         Supir::destroy($supir->noktp);
 

@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\SupabaseStorageService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class StorageFileController extends Controller
 {
     private const ALLOWED_PREFIXES = ['foto-mobil/', 'foto-supir/', 'bukti-tf/'];
+
+    public function __construct(
+        private SupabaseStorageService $storage
+    ) {}
 
     public function show(Request $request, string $path)
     {
@@ -25,14 +29,15 @@ class StorageFileController extends Controller
             abort(404);
         }
 
-        if (! Storage::disk('public')->exists($normalized)) {
+        $content = $this->storage->get($normalized);
+        if ($content === null) {
             abort(404);
         }
 
-        $mime = Storage::disk('public')->mimeType($normalized);
+        $mime = $this->storage->mimeType($normalized);
 
-        return response(Storage::disk('public')->get($normalized))
-            ->header('Content-Type', $mime ?: 'application/octet-stream')
+        return response($content)
+            ->header('Content-Type', $mime)
             ->header('Cache-Control', 'public, max-age=3600');
     }
 }

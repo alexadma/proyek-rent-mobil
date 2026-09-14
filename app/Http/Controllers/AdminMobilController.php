@@ -4,11 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\ActivityLog;
 use App\Models\Mobil;
+use App\Services\SupabaseStorageService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class AdminMobilController extends Controller
 {
+    public function __construct(
+        private SupabaseStorageService $storage
+    ) {}
     /**
      * Display a listing of the resource.
      */
@@ -43,7 +46,7 @@ class AdminMobilController extends Controller
         ]);
 
         if ($request->file('foto')) {
-            $validateData['foto'] = $request->file('foto')->store('foto-mobil', 'public');
+            $validateData['foto'] = $this->storage->upload($request->file('foto'), 'foto-mobil');
         }
 
         $validateData['status'] = 'TERSEDIA';
@@ -97,10 +100,10 @@ class AdminMobilController extends Controller
         }
 
         if ($request->file('foto')) {
-            if ($request->oldfoto && str_starts_with($request->oldfoto, 'foto-mobil/')) {
-                Storage::delete('foto-mobil/'.basename($request->oldfoto));
+            if ($request->oldfoto) {
+                $this->storage->delete($request->oldfoto);
             }
-            $validateData['foto'] = $request->file('foto')->store('foto-mobil', 'public');
+            $validateData['foto'] = $this->storage->upload($request->file('foto'), 'foto-mobil');
         }
 
         Mobil::where('id', $mobil->id)
@@ -117,7 +120,7 @@ class AdminMobilController extends Controller
         $nopol = $mobil->nopol;
 
         if ($mobil->foto) {
-            Storage::delete($mobil->foto);
+            $this->storage->delete($mobil->foto);
         }
         Mobil::destroy($mobil->id);
 

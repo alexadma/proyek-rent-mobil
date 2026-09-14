@@ -21,6 +21,14 @@
       "dest": "/storage/$1"
     },
     {
+      "src": "/index\\.php",
+      "dest": "/api/index.php"
+    },
+    {
+      "src": "^/$",
+      "dest": "/api/index.php"
+    },
+    {
       "handle": "filesystem"
     },
     {

@@ -1,5 +1,5 @@
 {
-  "buildCommand": "npm install && npm run build",
+  "buildCommand": "composer install --no-dev --no-scripts && npm install && npm run build",
   "installCommand": "",
   "outputDirectory": "public",
   "framework": null,
@@ -15,10 +15,6 @@
       "headers": {
         "Cache-Control": "public, max-age=31536000, immutable"
       }
-    },
-    {
-      "src": "/storage/(.*)",
-      "dest": "/storage/$1"
     },
     {
       "src": "/index\\.php",

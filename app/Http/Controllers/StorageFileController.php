@@ -7,7 +7,11 @@ use Illuminate\Http\Request;
 
 class StorageFileController extends Controller
 {
-    private const ALLOWED_PREFIXES = ['foto-mobil/', 'foto-supir/', 'bukti-tf/'];
+    private const ALLOWED_PREFIXES = [
+        'foto-mobil/', 'public/foto-mobil/',
+        'foto-supir/', 'public/foto-supir/',
+        'bukti-tf/',  'public/bukti-tf/',
+    ];
 
     public function __construct(
         private SupabaseStorageService $storage

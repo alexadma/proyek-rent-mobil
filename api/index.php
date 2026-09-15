@@ -33,3 +33,8 @@ try {
     }
 
     $app->handleRequest(Request::capture());
+} catch (\Throwable $e) {
+    http_response_code(500);
+    echo 'Internal Server Error';
+    exit(1);
+}

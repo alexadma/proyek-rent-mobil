@@ -103,14 +103,15 @@ class SupabaseStorageService
      */
     public function mimeType(string $storagePath): string
     {
-        $path = $this->normalizePath($storagePath);
+        $extension = strtolower(pathinfo($storagePath, PATHINFO_EXTENSION));
+        $mimeMap = [
+            'jpg' => 'image/jpeg', 'jpeg' => 'image/jpeg',
+            'png' => 'image/png', 'gif' => 'image/gif',
+            'webp' => 'image/webp', 'svg' => 'image/svg+xml',
+            'pdf' => 'application/pdf',
+        ];
 
-        $response = Http::withHeaders([
-            'Authorization' => "Bearer {$this->apiKey}",
-            'apikey' => $this->apiKey,
-        ])->head("{$this->baseUrl}/storage/v1/object/{$this->bucket}/{$path}");
-
-        return $response->header('Content-Type', 'application/octet-stream');
+        return $mimeMap[$extension] ?? 'application/octet-stream';
     }
 
     /**

@@ -36,8 +36,6 @@ try {
 } catch (\Throwable $e) {
     http_response_code(500);
     header('Content-Type: text/plain; charset=utf-8');
-    echo $e->getMessage() . "\n";
-    echo $e->getFile() . ':' . $e->getLine() . "\n";
-    echo $e->getTraceAsString();
+    echo 'Internal Server Error';
     exit(1);
 }

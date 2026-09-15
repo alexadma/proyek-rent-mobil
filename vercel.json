@@ -1,6 +1,6 @@
 {
   "buildCommand": "npm install && npm run build",
-  "installCommand": "composer install --no-dev --optimize-autoloader",
+  "installCommand": "",
   "outputDirectory": "public",
   "framework": null,
   "functions": {

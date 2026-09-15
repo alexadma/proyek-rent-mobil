@@ -35,6 +35,9 @@ try {
     $app->handleRequest(Request::capture());
 } catch (\Throwable $e) {
     http_response_code(500);
-    echo 'Internal Server Error';
+    header('Content-Type: text/plain; charset=utf-8');
+    echo $e->getMessage() . "\n";
+    echo $e->getFile() . ':' . $e->getLine() . "\n";
+    echo $e->getTraceAsString();
     exit(1);
 }

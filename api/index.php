@@ -29,7 +29,7 @@ try {
 
     if ($isProduction) {
         $app->useStoragePath('/tmp/storage');
-        $app->useBootstrapCachePath('/tmp/bootstrap/cache');
+        $app->useBootstrapPath('/tmp/bootstrap');
     }
 
     $app->handleRequest(Request::capture());
